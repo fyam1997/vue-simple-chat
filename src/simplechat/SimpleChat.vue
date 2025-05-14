@@ -109,6 +109,10 @@ function downloadChats() {
   URL.revokeObjectURL(url)
 }
 
+function openBugReport() {
+  window.open("https://github.com/fyam1997/vue-simple-chat", "_blank")
+}
+
 </script>
 
 <template>
@@ -124,6 +128,12 @@ function downloadChats() {
               variant="plain"
               @click="darkTheme = !darkTheme"
               title="change theme"
+          />
+          <v-btn
+              icon="md:bug_report"
+              variant="plain"
+              @click="openBugReport"
+              title="open bug report page"
           />
           <v-btn
               icon="md:download"
