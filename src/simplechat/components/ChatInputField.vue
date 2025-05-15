@@ -15,71 +15,58 @@ const loading = viewModel.loading
 </script>
 
 <template>
-  <v-textarea
-      variant="outlined"
-      v-model="inputModel.message"
-      auto-grow
-      max-rows="5"
-      rows="1"
-      no-resize
-      @keydown.enter.exact.prevent="viewModel.sendMessage()"
-      density="compact"
-      :clearable="!loading"
-      :disabled="loading"
-      hide-details
-  >
-    <template v-slot:prepend>
-      <v-dialog
-          transition="dialog-bottom-transition"
-          width="auto"
-      >
-        <template v-slot:activator="{ props }">
-          <v-icon-btn
-              icon="md:more_vert"
-              variant="plain"
-              v-bind="props"
-              title="more"
-          />
-        </template>
-        <template v-slot:default="{ isActive }">
-          <v-card class="pa-4 d-flex flex-column ga-2">
-            <v-select
-                label="Role"
-                prepend-icon="md:person"
-                v-model="inputModel.role"
-                :items="['user', 'system', 'assistant']"
-                variant="underlined"
-                hide-details
-                density="compact"
-                :disabled="loading"
-            />
-            <v-checkbox-btn
-                v-model="inputModel.generateOnSend"
-                label="Generate on send"
-            />
-            <v-btn
-                class="text-none"
-                prepend-icon="md:chat_bubble"
-                variant="outlined"
-                text="Generate Response"
-                :disabled="loading"
-                @click="viewModel.fetchApiResponse()"
-            />
-          </v-card>
-        </template>
-      </v-dialog>
-    </template>
-
-    <template v-slot:append>
-      <v-icon-btn
-          icon="md:send"
-          variant="plain"
-          :loading="loading"
-          title="send"
-          @click="viewModel.sendMessage()"
+  <div class="d-flex flex-column ga-2 pa-2">
+    <div class="d-flex flex-row align-center ga-2 flex-wrap justify-center">
+      <v-select
+          label="Role"
+          prepend-icon="md:person"
+          v-model="inputModel.role"
+          :items="['user', 'system', 'assistant']"
+          variant="underlined"
+          hide-details
+          density="compact"
+          :disabled="loading"
+          class="flex-grow-0"
       />
-    </template>
-  </v-textarea>
+      <v-checkbox-btn
+          v-model="inputModel.generateOnSend"
+          label="Generate on send"
+          :disabled="loading"
+          hide-details
+          color="primary"
+      />
+      <v-btn
+          class="text-none flex-grow-0"
+          icon="md:chat_bubble"
+          variant="plain"
+          title="Generate Response"
+          :disabled="loading"
+          @click="viewModel.fetchApiResponse()"
+      />
+    </div>
+    <v-textarea
+        variant="outlined"
+        v-model="inputModel.message"
+        auto-grow
+        max-rows="5"
+        rows="1"
+        no-resize
+        @keydown.enter.exact.prevent="viewModel.sendMessage()"
+        :clearable="!loading"
+        :disabled="loading"
+        hide-details
+    >
+      <template v-slot:append>
+        <v-icon-btn
+            icon="md:send"
+            variant="text"
+            :loading="loading"
+            title="send"
+            @click="viewModel.sendMessage()"
+        />
+      </template>
+    </v-textarea>
+  </div>
 </template>
 
 <style scoped>
