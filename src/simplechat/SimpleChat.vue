@@ -123,33 +123,25 @@ function openBugReport() {
 </script>
 
 <template>
-  <v-app :theme="darkTheme ? 'dark' : 'light'">
-    <div class="d-flex flex-column mw-800 align-self-center h-100">
-      <ChatToolbar
-          :api-config="apiConfig"
-          :dark-theme="darkTheme"
-          @downloadChats="downloadChats"
-          @openBugReport="openBugReport"
-          @toggleDownTheme="darkTheme = !darkTheme"
-      />
-      <ChatMessageList
-          :messages="messages"
-          :loading="loading"
-          @deleteMessage="deleteMessage"
-          @insertBefore="insertBefore"
-          ref="message-list"
-          class="flex-grow-1 overflow-y-scroll"
-      />
-      <v-divider/>
-      <ChatInputField
-          :input-model="inputModel"
-          :loading="loading"
-          @sendMessage="sendMessage"
-          @fetchApiResponse="fetchApiResponse"
-          class="pt-4 pb-4 flex-grow-0 "
-      />
-    </div>
-  </v-app>
+  <div class="d-flex flex-column mw-800 align-self-center h-100">
+    <ChatToolbar/>
+    <ChatMessageList
+        :messages="messages"
+        :loading="loading"
+        @deleteMessage="deleteMessage"
+        @insertBefore="insertBefore"
+        ref="message-list"
+        class="flex-grow-1 overflow-y-scroll"
+    />
+    <v-divider/>
+    <ChatInputField
+        :input-model="inputModel"
+        :loading="loading"
+        @sendMessage="sendMessage"
+        @fetchApiResponse="fetchApiResponse"
+        class="pt-4 pb-4 flex-grow-0 "
+    />
+  </div>
 </template>
 
 <style>

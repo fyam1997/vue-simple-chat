@@ -1,20 +1,19 @@
 <script setup lang="ts">
 
-import ChatConfigDialog, {ChatConfigModel} from "@/simplechat/components/ChatConfigDialog.vue";
+import ChatConfigDialog from "@/simplechat/components/ChatConfigDialog.vue";
 import {useWindowSize} from '@vueuse/core';
-import {computed} from "vue";
+import {computed, inject} from "vue";
+import {ChatViewModel} from "@/simplechat/components/ChatViewModel.ts";
 
-defineProps<{
-  apiConfig: ChatConfigModel,
-  darkTheme: boolean,
-}>()
-const emits = defineEmits<{
-  openBugReport: [],
-  downloadChats: [],
-  toggleDownTheme: [],
-}>()
 const screenWidth = useWindowSize().width
 const largeScreen = computed(() => screenWidth.value > 425)
+
+const viewModel = inject<ChatViewModel>("viewModel")
+
+const apiConfig = viewModel.apiConfig
+const toggleThemeIcon = computed(() => {
+  return viewModel.darkTheme.value ? 'md:light_mode' : 'md:dark_mode'
+})
 
 </script>
 
@@ -25,21 +24,21 @@ const largeScreen = computed(() => screenWidth.value > 425)
     </template>
     <template v-slot:append v-if="largeScreen">
       <v-btn
-          :icon="darkTheme ? 'md:light_mode' : 'md:dark_mode'"
+          :icon="toggleThemeIcon"
           variant="plain"
-          @click="emits('toggleDownTheme')"
+          @click="viewModel.toggleDarkTheme()"
           title="change theme"
       />
       <v-btn
           icon="md:bug_report"
           variant="plain"
-          @click="emits('openBugReport')"
+          @click="viewModel.openBugReport()"
           title="open bug report page"
       />
       <v-btn
           icon="md:download"
           variant="plain"
-          @click="emits('downloadChats')"
+          @click="viewModel.downloadChats()"
           title="download chats"
       />
     </template>
@@ -55,20 +54,20 @@ const largeScreen = computed(() => screenWidth.value > 425)
         </template>
         <v-list>
           <v-list-item
-              :prepend-icon="darkTheme ? 'md:light_mode' : 'md:dark_mode'"
-              @click="emits('toggleDownTheme')"
+              :prepend-icon="toggleThemeIcon"
+              @click="viewModel.toggleDarkTheme()"
               title="Change theme"
               class="text-none"
           />
           <v-list-item
               prepend-icon="md:bug_report"
-              @click="emits('openBugReport')"
+              @click="viewModel.openBugReport()"
               title="Bug report"
               class="text-none"
           />
           <v-list-item
               prepend-icon="md:download"
-              @click="emits('downloadChats')"
+              @click="viewModel.downloadChats()"
               title="Download"
               class="text-none"
           />
