@@ -30,7 +30,7 @@ viewModel.scrollEvent.observe(() => {
           @deleteMessage="viewModel.deleteMessage(msg.id)"
           @insertBefore="viewModel.insertBefore(msg.id)"
           ref="messages-items"
-          class="w-100 pl-2 pr-2 pt-4"
+          class="w-100 pl-2 pr-2 pb-4"
       />
     </TransitionGroup>
   </div>
