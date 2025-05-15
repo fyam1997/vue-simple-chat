@@ -6,7 +6,8 @@ import OpenAI from "openai";
 import {ChatMessageModel} from "@/simplechat/components/ChatMessageCell.vue";
 import ChatMessageList from "@/simplechat/components/ChatMessageList.vue";
 import ChatInputField, {ChatInputModel} from "@/simplechat/components/ChatInputField.vue";
-import ChatConfigDialog, {ChatConfigModel} from "@/simplechat/components/ChatConfigDialog.vue";
+import {ChatConfigModel} from "@/simplechat/components/ChatConfigDialog.vue";
+import ChatToolbar from "@/simplechat/components/ChatToolbar.vue";
 
 const darkTheme = useLocalStorage("app-dark-theme", true)
 
@@ -118,31 +119,13 @@ function openBugReport() {
 <template>
   <v-app :theme="darkTheme ? 'dark' : 'light'">
     <div class="d-flex flex-column mw-800 align-self-center h-100">
-      <v-toolbar>
-        <template v-slot:title>
-          <ChatConfigDialog :api-config="apiConfig"/>
-        </template>
-        <template v-slot:append>
-          <v-btn
-              :icon="darkTheme ? 'md:light_mode' : 'md:dark_mode'"
-              variant="plain"
-              @click="darkTheme = !darkTheme"
-              title="change theme"
-          />
-          <v-btn
-              icon="md:bug_report"
-              variant="plain"
-              @click="openBugReport"
-              title="open bug report page"
-          />
-          <v-btn
-              icon="md:download"
-              variant="plain"
-              @click="downloadChats"
-              title="download chats"
-          />
-        </template>
-      </v-toolbar>
+      <ChatToolbar
+          :api-config="apiConfig"
+          :dark-theme="darkTheme"
+          @downloadChats="downloadChats"
+          @openBugReport="openBugReport"
+          @toggleDownTheme="darkTheme = !darkTheme"
+      />
       <ChatMessageList
           :messages="messages"
           :loading="loading"
