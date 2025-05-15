@@ -134,13 +134,7 @@ function openBugReport() {
         class="flex-grow-1 overflow-y-scroll"
     />
     <v-divider/>
-    <ChatInputField
-        :input-model="inputModel"
-        :loading="loading"
-        @sendMessage="sendMessage"
-        @fetchApiResponse="fetchApiResponse"
-        class="pt-4 pb-4 flex-grow-0 "
-    />
+    <ChatInputField class="pt-4 pb-4 flex-grow-0 "/>
   </div>
 </template>
 

@@ -1,19 +1,17 @@
 <script setup lang="ts">
+import {inject} from "vue";
+import {ChatViewModel} from "@/simplechat/components/ChatViewModel.ts";
+
 export interface ChatInputModel {
   message: string
   role: string
   generateOnSend: boolean
 }
 
-defineProps<{
-  inputModel: ChatInputModel,
-  loading: boolean,
-}>()
+const viewModel = inject<ChatViewModel>("viewModel")
+const inputModel = viewModel.inputModel
+const loading = viewModel.loading
 
-const emits = defineEmits<{
-  sendMessage: [],
-  fetchApiResponse: [],
-}>()
 </script>
 
 <template>
@@ -24,7 +22,7 @@ const emits = defineEmits<{
       max-rows="5"
       rows="1"
       no-resize
-      @keydown.enter.exact.prevent="emits('sendMessage')"
+      @keydown.enter.exact.prevent="viewModel.sendMessage()"
       density="compact"
       :clearable="!loading"
       :disabled="loading"
@@ -65,7 +63,7 @@ const emits = defineEmits<{
                 variant="outlined"
                 text="Generate Response"
                 :disabled="loading"
-                @click="emits('fetchApiResponse')"
+                @click="viewModel.fetchApiResponse()"
             />
           </v-card>
         </template>
@@ -78,7 +76,7 @@ const emits = defineEmits<{
           variant="plain"
           :loading="loading"
           title="send"
-          @click="emits('sendMessage')"
+          @click="viewModel.sendMessage()"
       />
     </template>
   </v-textarea>
