@@ -125,14 +125,7 @@ function openBugReport() {
 <template>
   <div class="d-flex flex-column mw-800 align-self-center h-100">
     <ChatToolbar/>
-    <ChatMessageList
-        :messages="messages"
-        :loading="loading"
-        @deleteMessage="deleteMessage"
-        @insertBefore="insertBefore"
-        ref="message-list"
-        class="flex-grow-1 overflow-y-scroll"
-    />
+    <ChatMessageList class="flex-grow-1 overflow-y-scroll"/>
     <v-divider/>
     <ChatInputField class="pt-4 pb-4 flex-grow-0 "/>
   </div>

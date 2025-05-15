@@ -1,26 +1,21 @@
 <script setup lang="ts">
 import ChatMessageCell, {ChatMessageModel} from "@/simplechat/components/ChatMessageCell.vue";
-import {useTemplateRef} from "vue";
-
-const props = defineProps<{
-  messages: ChatMessageModel[],
-  loading: boolean,
-}>()
-
-const emits = defineEmits<{
-  insertBefore: [id: number],
-  deleteMessage: [id: number],
-}>()
-defineExpose({scrollToLastMessage})
+import {inject, useTemplateRef} from "vue";
+import {ChatViewModel} from "@/simplechat/components/ChatViewModel.ts";
 
 const messageItemsRef = useTemplateRef("messages-items")
 
-function scrollToLastMessage(timeout: number = 50) {
+const viewModel = inject<ChatViewModel>("viewModel")
+
+const messages = viewModel.messages
+const loading = viewModel.loading
+
+viewModel.scrollEvent.observe(() => {
   setTimeout(() => {
     const msgList = messageItemsRef.value
     msgList.at(-1).$el.scrollIntoView({behavior: "smooth", block: "end"})
-  }, timeout)
-}
+  }, 50)
+})
 
 </script>
 
@@ -28,12 +23,12 @@ function scrollToLastMessage(timeout: number = 50) {
   <div class="position-relative">
     <TransitionGroup>
       <ChatMessageCell
-          v-for="msg in props.messages"
+          v-for="msg in messages"
           :key="msg.id"
           :message="msg"
-          :loading="props.loading"
-          @deleteMessage="emits('deleteMessage', msg.id)"
-          @insertBefore="emits('insertBefore', msg.id)"
+          :loading="loading"
+          @deleteMessage="viewModel.deleteMessage(msg.id)"
+          @insertBefore="viewModel.insertBefore(msg.id)"
           ref="messages-items"
           class="w-100 pl-2 pr-2 pt-4"
       />
