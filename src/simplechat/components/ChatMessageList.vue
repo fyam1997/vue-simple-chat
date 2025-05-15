@@ -11,7 +11,7 @@ const emits = defineEmits<{
   insertBefore: [id: number],
   deleteMessage: [id: number],
 }>()
-defineExpose({ scrollToLastMessage })
+defineExpose({scrollToLastMessage})
 
 const messageItemsRef = useTemplateRef("messages-items")
 
@@ -35,7 +35,7 @@ function scrollToLastMessage(timeout: number = 50) {
           @deleteMessage="emits('deleteMessage', msg.id)"
           @insertBefore="emits('insertBefore', msg.id)"
           ref="messages-items"
-          class="w-100 pa-2"
+          class="w-100 pl-2 pr-2 pt-4"
       />
     </TransitionGroup>
   </div>

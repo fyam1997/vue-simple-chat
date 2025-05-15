@@ -138,7 +138,7 @@ function openBugReport() {
           @deleteMessage="deleteMessage"
           @insertBefore="insertBefore"
           ref="message-list"
-          class="flex-grow-1 overflow-y-scroll pl-4 pr-4"
+          class="flex-grow-1 overflow-y-scroll"
       />
       <v-divider/>
       <ChatInputField
