@@ -12,7 +12,10 @@ import ChatToolbar from "@/simplechat/components/ChatToolbar.vue";
 const darkTheme = useLocalStorage("app-dark-theme", true)
 
 const messages = useLocalStorage<ChatMessageModel[]>("messages-list", [])
-const inputModel = useLocalStorage<ChatInputModel>("input-model", {role: "system", message: ""})
+const inputModel = useLocalStorage<ChatInputModel>(
+    "input-model",
+    {role: "user", message: "", generateOnSend: false}
+)
 
 const apiConfig = useLocalStorage<ChatConfigModel>("api-config", {
   baseURL: "",
@@ -38,6 +41,9 @@ function sendMessage() {
 
   inputModel.value.message = ""
   messageListRef.value.scrollToLastMessage()
+  if (inputModel.value.generateOnSend) {
+    fetchApiResponse()
+  }
 }
 
 function deleteMessage(id: number) {
@@ -140,7 +146,7 @@ function openBugReport() {
           :loading="loading"
           @sendMessage="sendMessage"
           @fetchApiResponse="fetchApiResponse"
-          class="pa-4"
+          class="pt-4 pb-4 flex-grow-0 "
       />
     </div>
   </v-app>
