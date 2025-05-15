@@ -6,7 +6,7 @@ import {computed, inject} from "vue";
 import {ChatViewModel} from "@/simplechat/components/ChatViewModel.ts";
 
 const screenWidth = useWindowSize().width
-const largeScreen = computed(() => screenWidth.value > 425)
+const largeScreen = computed(() => screenWidth.value >= 425)
 
 const viewModel = inject<ChatViewModel>("viewModel")
 
