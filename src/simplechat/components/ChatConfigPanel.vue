@@ -16,7 +16,7 @@ const appVersion = __APP_VERSION__
 </script>
 
 <template>
-  <div class="d-flex flex-column ga-4 overflow-y-scroll">
+  <div class="d-flex flex-column ga-4 overflow-y-auto">
     <div>
       <v-alert border="start">
         Configuration is only saved in the browser.

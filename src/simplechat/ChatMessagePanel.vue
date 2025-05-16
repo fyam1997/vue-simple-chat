@@ -7,7 +7,7 @@ import ChatInputField from "@/simplechat/components/ChatInputField.vue";
 
 <template>
   <div class="d-flex flex-column align-self-center">
-    <ChatMessageList class="flex-grow-1 overflow-y-scroll"/>
+    <ChatMessageList class="flex-grow-1 overflow-y-auto"/>
     <v-divider/>
     <ChatInputField class="pt-4 flex-grow-0"/>
   </div>
