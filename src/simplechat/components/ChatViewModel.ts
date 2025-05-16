@@ -8,7 +8,7 @@ import {SingleShotEvent} from "@/simplechat/components/SingleShotEvent.ts";
 
 export class ChatViewModel {
     readonly darkTheme = useLocalStorage("app-dark-theme", true)
-    readonly messages = useLocalStorage<ChatMessageModel[]>("this.messages-list", [])
+    readonly messages = useLocalStorage<ChatMessageModel[]>("messages-list", [])
     readonly inputModel = useLocalStorage<ChatInputModel>(
         "input-model",
         {role: "user", message: "", generateOnSend: false}
