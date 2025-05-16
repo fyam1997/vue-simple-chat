@@ -15,7 +15,7 @@ const loading = viewModel.loading
 </script>
 
 <template>
-  <div class="d-flex flex-column ga-4">
+  <div class="d-flex flex-column ga-4 overflow-y-scroll">
     <div>
       <v-alert border="start">
         Configuration is only saved in the browser.
