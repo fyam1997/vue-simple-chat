@@ -11,6 +11,8 @@ const toggleThemeIcon = computed(() => {
   return viewModel.darkTheme.value ? 'md:light_mode' : 'md:dark_mode'
 })
 
+const appVersion = __APP_VERSION__
+
 </script>
 
 <template>
@@ -47,6 +49,7 @@ const toggleThemeIcon = computed(() => {
               title="Download"
               class="text-none"
           />
+          <v-list-item :subtitle="'version: '+appVersion"/>
         </v-list>
       </v-menu>
     </template>

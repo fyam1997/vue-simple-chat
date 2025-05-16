@@ -11,6 +11,7 @@ const toggleThemeIcon = computed(() => {
 })
 const inputModel = viewModel.inputModel
 const loading = viewModel.loading
+const appVersion = __APP_VERSION__
 
 </script>
 
@@ -87,6 +88,7 @@ const loading = viewModel.loading
         title="Download"
         class="text-none"
     />
+    <v-list-item :subtitle="'version: '+appVersion"/>
   </div>
 </template>
 
