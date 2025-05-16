@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import SimpleChat from "@/simplechat/SimpleChat.vue";
+import ChatMessagePanel from "@/simplechat/ChatMessagePanel.vue";
 import {ChatViewModel} from "@/simplechat/components/ChatViewModel.ts";
 import {computed, provide, ref} from "vue";
 import {useWindowSize} from "@vueuse/core";
@@ -39,7 +39,7 @@ const tab = ref("chat-panel")
         </v-tabs-window-item>
 
         <v-tabs-window-item value="chat-panel" class="h-100">
-          <SimpleChat class="h-100 pl-4 pr-4"/>
+          <ChatMessagePanel class="h-100 pl-4 pr-4"/>
         </v-tabs-window-item>
       </v-tabs-window>
     </div>
@@ -47,7 +47,7 @@ const tab = ref("chat-panel")
     <div v-else class="w-100 h-100 d-flex flex-row ga-2 justify-center">
       <ChatConfigPanel class="config-panel-large h-100 pa-4"/>
       <v-divider vertical class="mt-4 mb-4"/>
-      <SimpleChat class="chat-panel-large flex-grow-1 h-100 pl-4 pr-4 pb-4"/>
+      <ChatMessagePanel class="chat-panel-large flex-grow-1 h-100 pl-4 pr-4 pb-4"/>
     </div>
   </v-app>
 </template>
