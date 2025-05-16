@@ -3,6 +3,7 @@
 import ChatMessageList from "@/simplechat/components/ChatMessageList.vue";
 import ChatInputField from "@/simplechat/components/ChatInputField.vue";
 import ChatToolbar from "@/simplechat/components/ChatToolbar.vue";
+import ChatInputConfigRow from "@/simplechat/components/ChatInputConfigRow.vue";
 
 </script>
 
@@ -11,7 +12,10 @@ import ChatToolbar from "@/simplechat/components/ChatToolbar.vue";
     <ChatToolbar/>
     <ChatMessageList class="flex-grow-1 overflow-y-scroll"/>
     <v-divider/>
-    <ChatInputField class="pt-4 pb-4 flex-grow-0 "/>
+    <div class="pt-4 pb-4 flex-grow-0">
+      <ChatInputConfigRow/>
+      <ChatInputField/>
+    </div>
   </div>
 </template>
 
