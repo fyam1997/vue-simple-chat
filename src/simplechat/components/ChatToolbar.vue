@@ -1,12 +1,8 @@
 <script setup lang="ts">
 
 import ChatConfigDialog from "@/simplechat/components/ChatConfigDialog.vue";
-import {useWindowSize} from '@vueuse/core';
 import {computed, inject} from "vue";
 import {ChatViewModel} from "@/simplechat/components/ChatViewModel.ts";
-
-const screenWidth = useWindowSize().width
-const largeScreen = computed(() => screenWidth.value >= 425)
 
 const viewModel = inject<ChatViewModel>("viewModel")
 
@@ -22,27 +18,7 @@ const toggleThemeIcon = computed(() => {
     <template v-slot:title>
       <ChatConfigDialog :api-config="apiConfig"/>
     </template>
-    <template v-slot:append v-if="largeScreen">
-      <v-btn
-          :icon="toggleThemeIcon"
-          variant="plain"
-          @click="viewModel.toggleDarkTheme()"
-          title="change theme"
-      />
-      <v-btn
-          icon="md:bug_report"
-          variant="plain"
-          @click="viewModel.openBugReport()"
-          title="open bug report page"
-      />
-      <v-btn
-          icon="md:download"
-          variant="plain"
-          @click="viewModel.downloadChats()"
-          title="download chats"
-      />
-    </template>
-    <template v-slot:append v-if="!largeScreen">
+    <template v-slot:append>
       <v-menu>
         <template v-slot:activator="{ props }">
           <v-btn

@@ -59,6 +59,6 @@ const apiConfig = viewModel.apiConfig
 
 <style scoped>
 .dialog-card {
-  max-width: 600px;
+  max-width: 425px;
 }
 </style>
