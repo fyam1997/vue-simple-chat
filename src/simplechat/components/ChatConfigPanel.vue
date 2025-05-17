@@ -61,32 +61,31 @@ const appVersion = __APP_VERSION__
         label="Generate on send"
         :disabled="loading"
         hide-details
-        color="primary"
     />
-    <v-list-item
-        class="text-none flex-grow-0"
-        prepend-icon="md:chat_bubble"
-        title="Generate Response"
-        :disabled="loading"
-        @click="viewModel.fetchApiResponse()"
-    />
+
+    <v-spacer/>
+    <v-divider/>
+
     <v-list-item
         :prepend-icon="toggleThemeIcon"
         @click="viewModel.toggleDarkTheme()"
         title="Change theme"
         class="text-none"
+        density="compact"
     />
     <v-list-item
         prepend-icon="md:bug_report"
         @click="viewModel.openBugReport()"
         title="Bug report"
         class="text-none"
+        density="compact"
     />
     <v-list-item
         prepend-icon="md:download"
         @click="viewModel.downloadChats()"
         title="Download"
         class="text-none"
+        density="compact"
     />
     <v-list-item :subtitle="'version: '+appVersion"/>
   </div>

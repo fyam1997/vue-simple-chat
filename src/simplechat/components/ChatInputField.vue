@@ -30,6 +30,13 @@ const loading = viewModel.loading
     >
       <template v-slot:append>
         <v-icon-btn
+            icon="md:chat_bubble"
+            variant="text"
+            :loading="loading"
+            title="generate response"
+            @click="viewModel.fetchApiResponse()"
+        />
+        <v-icon-btn
             icon="md:send"
             variant="text"
             :loading="loading"
