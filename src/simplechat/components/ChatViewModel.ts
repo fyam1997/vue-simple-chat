@@ -1,5 +1,5 @@
 import {useLocalStorage} from "@vueuse/core";
-import {ref, useTemplateRef} from "vue";
+import {ref} from "vue";
 import OpenAI from "openai";
 import {ChatMessageModel} from "@/simplechat/components/ChatMessageCell.vue";
 import {ChatInputModel} from "@/simplechat/components/ChatInputField.vue";
@@ -18,8 +18,6 @@ export class ChatViewModel {
         apiKey: "",
         model: "",
     })
-
-    readonly messageListRef = useTemplateRef("message-list")
 
     readonly loading = ref(false)
 
@@ -101,20 +99,6 @@ export class ChatViewModel {
             }
             this.messages.value.splice(index, 0, newMsg)
             this.inputModel.value.message = ""
-        }
-    }
-
-    updateMessageContent(id: number, content: string) {
-        const index = this.findMessageIndex(id)
-        if (index !== -1) {
-            this.messages.value[index].content = content
-        }
-    }
-
-    updateMessageRole(id: number, role: string) {
-        const index = this.findMessageIndex(id)
-        if (index !== -1) {
-            this.messages.value[index].role = role
         }
     }
 

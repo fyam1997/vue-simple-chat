@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import ChatMessageCell, {ChatMessageModel} from "@/simplechat/components/ChatMessageCell.vue";
+import ChatMessageCell from "@/simplechat/components/ChatMessageCell.vue";
 import {inject, useTemplateRef} from "vue";
 import {ChatViewModel} from "@/simplechat/components/ChatViewModel.ts";
 
