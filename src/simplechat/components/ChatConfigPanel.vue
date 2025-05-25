@@ -3,6 +3,7 @@
 import {computed, inject} from "vue";
 import {ChatViewModel} from "@/simplechat/components/ChatViewModel.ts";
 import APIConfigDialog from "@/shared/apiconfig/APIConfigDialog.vue";
+import {ChatIndex} from "@/simplechat/storage/ChatStorage.ts";
 
 const viewModel = inject<ChatViewModel>("viewModel")
 const toggleThemeIcon = computed(() => {
@@ -12,11 +13,81 @@ const inputModel = viewModel.inputModel
 const loading = viewModel.loading
 const appVersion = __APP_VERSION__
 
+// TODO many duplicated with api config, try extract
+const store = viewModel.chatStorage
+const idList = store.idList
+const selectedItem = computed(() => {
+  const found = idList.value.find(item => item.id === store.id.value)
+  return found ?? idList.value[0]
+})
+
+function itemProps(item: ChatIndex) {
+  let name = item.name
+  if (!name) {
+    name = "No name"
+  }
+  return {title: name}
+}
+
+function itemSelected(item: ChatIndex) {
+  store.id.value = item.id
+}
+
+function addNewConfig() {
+  const newID = Date.now()
+  idList.value.push({id: newID, name: ""})
+  store.id.value = newID
+}
+
+function deleteConfig() {
+  if (idList.value.length > 1) {
+    const deleteID = store.id.value
+    const index = idList.value.findIndex(item => item.id === deleteID)
+    if (index !== -1) {
+      idList.value.splice(index, 1)
+      store.id.value = idList.value[0].id
+      store.removeConfig(deleteID)
+    }
+  } else {
+    viewModel.messages.value = []
+  }
+}
+
 </script>
 
 <template>
   <div class="d-flex flex-column ga-4 overflow-y-auto">
-    <APIConfigDialog expanded/>
+    <div class="d-flex flex-row align-center">
+      <v-select
+          variant="outlined"
+          :model-value="selectedItem"
+          :items="idList"
+          :item-props="itemProps"
+          @update:model-value="itemSelected"
+          hide-details
+          label="Chat"
+      />
+      <v-btn
+          icon="md:note_add"
+          variant="plain"
+          @click="addNewConfig"
+          title="Add chat"
+      />
+      <v-btn
+          icon="md:delete"
+          variant="plain"
+          @click="deleteConfig"
+          title="Delete chat"
+      />
+    </div>
+    <v-text-field
+        label="Chat name"
+        variant="outlined"
+        class="flex-grow-0"
+        hide-details
+        v-model="selectedItem.name"
+    />
+    <APIConfigDialog/>
     <v-select
         label="Role"
         prepend-icon="md:person"

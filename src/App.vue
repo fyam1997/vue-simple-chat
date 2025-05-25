@@ -5,9 +5,11 @@ import {computed, provide, ref} from "vue";
 import {useWindowSize} from "@vueuse/core";
 import ChatConfigPanel from "@/simplechat/components/ChatConfigPanel.vue";
 import {APIConfigStorage} from "@/shared/apiconfig/APICondigStorage.ts";
+import {ChatStorage} from "@/simplechat/storage/ChatStorage.ts";
 
 const apiConfigStorage = new APIConfigStorage()
-const viewModel = new ChatViewModel(apiConfigStorage)
+const chatStorage = new ChatStorage()
+const viewModel = new ChatViewModel(apiConfigStorage, chatStorage)
 provide("viewModel", viewModel)
 provide("apiConfigStorage", apiConfigStorage)
 

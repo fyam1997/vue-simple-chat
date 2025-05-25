@@ -1,15 +1,14 @@
 import {useLocalStorage} from "@vueuse/core";
 import {Ref, ref} from "vue";
 import OpenAI from "openai";
-import {ChatMessageModel} from "@/simplechat/components/ChatMessageCell.vue";
 import {ChatInputModel} from "@/simplechat/components/ChatInputField.vue";
-import {ChatConfigModel} from "@/simplechat/components/ChatConfigDialog.vue";
 import {SingleShotEvent} from "@/simplechat/components/SingleShotEvent.ts";
 import {APIConfigModel, APIConfigStorage} from "@/shared/apiconfig/APICondigStorage.ts";
+import {ChatMessageModel, ChatStorage} from "@/simplechat/storage/ChatStorage.ts";
 
 export class ChatViewModel {
     readonly darkTheme = useLocalStorage("app-dark-theme", true)
-    readonly messages = useLocalStorage<ChatMessageModel[]>("messages-list", [])
+    readonly messages: Ref<ChatMessageModel[]>
     readonly inputModel = useLocalStorage<ChatInputModel>(
         "input-model",
         {role: "user", message: "", generateOnSend: false}
@@ -20,8 +19,9 @@ export class ChatViewModel {
 
     readonly scrollEvent = new SingleShotEvent<void>()
 
-    constructor(apiConfigStorage: APIConfigStorage) {
+    constructor(apiConfigStorage: APIConfigStorage, public chatStorage: ChatStorage) {
         this.apiConfig = apiConfigStorage.config
+        this.messages = chatStorage.chatMessages
     }
 
     async sendMessage() {

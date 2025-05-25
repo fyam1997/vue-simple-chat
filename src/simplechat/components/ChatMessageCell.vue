@@ -1,9 +1,5 @@
 <script setup lang="ts">
-export interface ChatMessageModel {
-  role: string
-  content: string
-  id: number
-}
+import {ChatMessageModel} from "@/simplechat/storage/ChatStorage.ts";
 
 const props = defineProps<{
   message: ChatMessageModel,

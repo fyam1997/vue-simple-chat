@@ -1,34 +1,65 @@
+import {Ref, ref} from "vue";
 import {openDB} from "idb";
 import {useIndexedDB} from "@/shared/db/DatabaseUtils.ts";
-import {Ref} from "vue";
 
-export enum SharedStore {
-    APIConfig = "APIConfig",
+// TODO many duplicated with api config, try extract
+export interface ChatMessageModel {
+    role: string
+    content: string
+    id: number
 }
 
-function sharedDB() {
-    return openDB("shared", 1, {
+export interface ChatIndex {
+    id: number
+    name: string
+}
+
+export class ChatStorage {
+    id = chatData<number>(
+        ref("selectedID"),
+        0,
+    )
+    idList = chatData<ChatIndex[]>(
+        ref("index"),
+        [{id: 0, name: "Default"}],
+    )
+    chatMessages = chatData<ChatMessageModel[]>(
+        this.id,
+        [],
+    )
+
+    removeConfig(id: number) {
+        removeChatData(id).catch(console.error)
+    }
+}
+
+export enum ChatStore {
+    ChatMessages = "ChatMessages",
+}
+
+function chatDB() {
+    return openDB("Chat", 1, {
         upgrade(db) {
-            db.createObjectStore(SharedStore.APIConfig)
+            db.createObjectStore(ChatStore.ChatMessages)
         }
     })
 }
 
-export function sharedData<T>(id: Ref<string | number>, defaultValue: T, store: SharedStore, debounce: number = null) {
+export function chatData<T>(id: Ref<string | number>, defaultValue: T, debounce: number = null) {
     return useIndexedDB(
         id,
         defaultValue,
-        sharedDB,
+        chatDB,
         {
-            store: store,
-            db: "shared",
+            store: ChatStore.ChatMessages,
+            db: "Chat",
             debounce: debounce,
             deep: true,
         },
     )
 }
 
-export async function removeSharedData(id: string | number, store: string) {
-    const db = await sharedDB();
-    await db.delete(store, id)
+export async function removeChatData(id: string | number) {
+    const db = await chatDB()
+    await db.delete(ChatStore.ChatMessages, id)
 }
