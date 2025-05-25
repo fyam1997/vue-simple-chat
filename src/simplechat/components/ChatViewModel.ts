@@ -74,6 +74,7 @@ export class ChatViewModel {
             }
 
             this.messages.value.at(-1).content += event.choices[0].delta.content
+            this.scrollEvent.emit()
         }
         this.loading.value = false
     }
