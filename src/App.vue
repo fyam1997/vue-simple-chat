@@ -4,9 +4,12 @@ import {ChatViewModel} from "@/simplechat/components/ChatViewModel.ts";
 import {computed, provide, ref} from "vue";
 import {useWindowSize} from "@vueuse/core";
 import ChatConfigPanel from "@/simplechat/components/ChatConfigPanel.vue";
+import {APIConfigStorage} from "@/shared/apiconfig/APICondigStorage.ts";
 
-const viewModel = new ChatViewModel()
+const apiConfigStorage = new APIConfigStorage()
+const viewModel = new ChatViewModel(apiConfigStorage)
 provide("viewModel", viewModel)
+provide("apiConfigStorage", apiConfigStorage)
 
 const theme = computed(() => {
   return viewModel.darkTheme.value ? 'dark' : 'light'

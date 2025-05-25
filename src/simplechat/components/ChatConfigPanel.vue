@@ -2,10 +2,9 @@
 
 import {computed, inject} from "vue";
 import {ChatViewModel} from "@/simplechat/components/ChatViewModel.ts";
+import APIConfigDialog from "@/shared/apiconfig/APIConfigDialog.vue";
 
 const viewModel = inject<ChatViewModel>("viewModel")
-
-const apiConfig = viewModel.apiConfig
 const toggleThemeIcon = computed(() => {
   return viewModel.darkTheme.value ? 'md:light_mode' : 'md:dark_mode'
 })
@@ -17,34 +16,7 @@ const appVersion = __APP_VERSION__
 
 <template>
   <div class="d-flex flex-column ga-4 overflow-y-auto">
-    <div>
-      <v-alert border="start">
-        Configuration is only saved in the browser.
-        Please clear API key before leave if you are using public devices.
-      </v-alert>
-    </div>
-    <v-text-field
-        variant="outlined"
-        label="BaseURL"
-        v-model="apiConfig.baseURL"
-        class="flex-grow-0"
-        hide-details
-    />
-    <v-text-field
-        variant="outlined"
-        label="ApiKey"
-        type="password"
-        v-model="apiConfig.apiKey"
-        class="flex-grow-0"
-        hide-details
-    />
-    <v-text-field
-        variant="outlined"
-        label="Model"
-        v-model="apiConfig.model"
-        class="flex-grow-0"
-        hide-details
-    />
+    <APIConfigDialog expanded/>
     <v-select
         label="Role"
         prepend-icon="md:person"
