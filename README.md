@@ -23,6 +23,7 @@ npm run build
 ### Deployment
 
 ```sh
+npm install
 npm run build
 gh-pages -d dist -m "$(git rev-parse HEAD)"
 ```
