@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import ChatMessagePanel from "@/simplechat/ChatMessagePanel.vue";
+import ChatMessagePanel from "@/simplechat/components/ChatMessagePanel.vue";
 import {ChatViewModel} from "@/simplechat/components/ChatViewModel.ts";
 import {computed, provide, ref} from "vue";
 import {useWindowSize} from "@vueuse/core";
