@@ -24,8 +24,6 @@ const loading = viewModel.loading
         rows="1"
         no-resize
         @keydown.enter.exact.prevent="viewModel.sendMessage()"
-        :clearable="!loading"
-        :disabled="loading"
         hide-details
     >
       <template v-slot:append>

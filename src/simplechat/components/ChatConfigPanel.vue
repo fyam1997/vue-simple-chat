@@ -66,18 +66,21 @@ function deleteConfig() {
           @update:model-value="itemSelected"
           hide-details
           label="Chat"
+          :disabled="loading"
       />
       <v-btn
           icon="md:note_add"
           variant="plain"
           @click="addNewConfig"
           title="Add chat"
+          :disabled="loading"
       />
       <v-btn
           icon="md:delete"
           variant="plain"
           @click="deleteConfig"
           title="Delete chat"
+          :disabled="loading"
       />
     </div>
     <v-text-field

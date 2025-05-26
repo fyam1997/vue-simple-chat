@@ -86,7 +86,8 @@ export class ChatViewModel {
             this.messages.value.splice(index, 1)
             if (isLast) {
                 // If scrolled to bottom and remove last item, container size change isn't smooth
-                this.scrollEvent.emit()
+                // TODO randomly fail
+                // this.scrollEvent.emit()
             }
         }
     }
