@@ -25,7 +25,7 @@ export function useIndexedDB<T>(
         if (value !== undefined) {
             data.value = value
         } else {
-            data.value = defaultValue
+            data.value = structuredClone(defaultValue)
             await save(defaultValue)
         }
     }
