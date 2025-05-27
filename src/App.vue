@@ -50,7 +50,7 @@ const tab = ref("chat-panel")
     </div>
 
     <div v-else class="w-100 h-100 d-flex flex-row ga-2 justify-center">
-      <ChatConfigPanel class="config-panel-large h-100 pa-4"/>
+      <ChatConfigPanel class="config-panel-large w-100 h-100 pa-4"/>
       <v-divider vertical class="mt-4 mb-4"/>
       <ChatMessagePanel class="chat-panel-large flex-grow-1 h-100 pl-4 pr-4 pb-4"/>
     </div>
