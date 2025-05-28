@@ -69,14 +69,13 @@ const editing = ref(false)
         no-resize
         :readonly="loading"
         hide-details
-        class="button1"
         @keydown.ctrl.enter.exact="editing=false"
     />
     <v-card-text
         v-else
         key="display"
         v-html="display"
-        class="button1"
+        class="overflow-auto"
     />
   </v-card>
 </template>
