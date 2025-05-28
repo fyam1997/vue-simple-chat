@@ -1,5 +1,7 @@
 <script setup lang="ts">
 import {ChatMessageModel} from "@/simplechat/storage/ChatStorage.ts";
+import {marked} from 'marked'
+import {computed, ref} from "vue";
 
 const props = defineProps<{
   message: ChatMessageModel,
@@ -11,12 +13,16 @@ const emits = defineEmits<{
   deleteMessage: []
 }>()
 
+const display = computed(() => marked(props.message.content))
+const editing = ref(false)
 
 </script>
 
 <template>
-  <div>
-    <div class="d-flex flex-row align-end">
+  <v-card
+      variant="text"
+  >
+    <div class="d-flex flex-row align-end flex-wrap">
       <v-select
           v-model="props.message.role"
           :items="['user', 'system', 'assistant']"
@@ -26,6 +32,14 @@ const emits = defineEmits<{
           class="flex-grow-0"
       />
       <v-spacer/>
+      <v-icon-btn
+          :icon="editing?'md:done':'md:edit'"
+          variant="plain"
+          size="small"
+          @click="editing=!editing"
+          :disabled="loading"
+          title="insert above"
+      />
       <v-icon-btn
           icon="md:add"
           variant="plain"
@@ -38,12 +52,15 @@ const emits = defineEmits<{
           icon="md:close"
           variant="plain"
           size="small"
+          class="ml-4"
           @click="emits('deleteMessage')"
           :disabled="loading"
           title="delete"
       />
     </div>
     <v-textarea
+        v-if="editing"
+        key="edit"
         v-model="props.message.content"
         variant="outlined"
         auto-grow
@@ -52,8 +69,16 @@ const emits = defineEmits<{
         no-resize
         :readonly="loading"
         hide-details
+        class="button1"
+        @keydown.ctrl.enter.exact="editing=false"
     />
-  </div>
+    <v-card-text
+        v-else
+        key="display"
+        v-html="display"
+        class="button1"
+    />
+  </v-card>
 </template>
 
 <style scoped>
