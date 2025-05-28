@@ -26,6 +26,7 @@ const tab = ref("chat-panel")
 
 <template>
   <v-app :theme="theme">
+    <v-snackbar-queue v-model="viewModel.snackbarMessages.value" location="top"></v-snackbar-queue>
     <div v-if="!largeScreen" class="w-100 h-100 d-flex flex-column">
       <div>
         <v-tabs

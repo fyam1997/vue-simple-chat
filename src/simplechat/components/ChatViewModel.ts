@@ -18,6 +18,7 @@ export class ChatViewModel {
     readonly loading = ref(false)
 
     readonly scrollEvent = new SingleShotEvent<void>()
+    readonly snackbarMessages = ref<string[]>([])
 
     constructor(apiConfigStorage: APIConfigStorage, public chatStorage: ChatStorage) {
         this.apiConfig = apiConfigStorage.config
@@ -44,37 +45,51 @@ export class ChatViewModel {
     }
 
     async fetchApiResponse() {
+        const apiConfig = this.apiConfig.value
+        if (!apiConfig.baseURL || !apiConfig.model) {
+            this.snackbarMessages.value.push("API configuration is empty")
+            return
+        }
+        if (this.messages.value.length === 0) {
+            this.snackbarMessages.value.push("Chat is empty")
+            return
+        }
         this.loading.value = true
-        const client = new OpenAI({
-            baseURL: this.apiConfig.value.baseURL,
-            apiKey: this.apiConfig.value.apiKey,
-            dangerouslyAllowBrowser: true,
-        })
-        // declare as any[] to suppress ChatCompletionMessageParam's warning
-        const requestMessages: any[] = this.messages.value.map((msg) => {
-            return {
-                role: msg.role,
-                content: msg.content,
-            }
-        })
-        const completion = await client.chat.completions.create({
-            model: this.apiConfig.value.model,
-            messages: requestMessages,
-            stream: true
-        })
-        let firstReceived = false
-        for await (const event of completion) {
-            if (!firstReceived) {
-                firstReceived = true
-                this.messages.value.push({
-                    role: "assistant",
-                    content: "",
-                    id: Date.now(),
-                })
-            }
+        try {
+            const client = new OpenAI({
+                baseURL: this.apiConfig.value.baseURL,
+                apiKey: this.apiConfig.value.apiKey,
+                dangerouslyAllowBrowser: true,
+            })
+            // declare as any[] to suppress ChatCompletionMessageParam's warning
+            const requestMessages: any[] = this.messages.value.map((msg) => {
+                return {
+                    role: msg.role,
+                    content: msg.content,
+                }
+            })
+            const completion = await client.chat.completions.create({
+                model: this.apiConfig.value.model,
+                messages: requestMessages,
+                stream: true
+            })
+            let firstReceived = false
+            for await (const event of completion) {
+                if (!firstReceived) {
+                    firstReceived = true
+                    this.messages.value.push({
+                        role: "assistant",
+                        content: "",
+                        id: Date.now(),
+                    })
+                }
 
-            this.messages.value.at(-1).content += event.choices[0].delta.content
-            this.scrollEvent.emit()
+                this.messages.value.at(-1).content += event.choices[0].delta.content
+                this.scrollEvent.emit()
+            }
+        } catch (e) {
+            this.snackbarMessages.value.push("Translation fail")
+            console.error(e)
         }
         this.loading.value = false
     }
