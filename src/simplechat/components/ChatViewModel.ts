@@ -17,7 +17,7 @@ export class ChatViewModel {
 
     readonly loading = ref(false)
 
-    readonly scrollEvent = new SingleShotEvent<void>()
+    readonly scrollEvent = new SingleShotEvent<number>()
     readonly snackbarMessages = ref<string[]>([])
 
     constructor(apiConfigStorage: APIConfigStorage, public chatStorage: ChatStorage) {
@@ -38,7 +38,7 @@ export class ChatViewModel {
         this.messages.value.push(newMsg)
 
         this.inputModel.value.message = ""
-        this.scrollEvent.emit()
+        this.scrollEvent.emit(this.messages.value.length - 1)
         if (this.inputModel.value.generateOnSend) {
             await this.fetchApiResponse()
         }
@@ -85,7 +85,7 @@ export class ChatViewModel {
                 }
 
                 this.messages.value.at(-1).content += event.choices[0].delta.content
-                this.scrollEvent.emit()
+                this.scrollEvent.emit(this.messages.value.length - 1)
             }
         } catch (e) {
             this.snackbarMessages.value.push("Translation fail")
@@ -98,12 +98,11 @@ export class ChatViewModel {
         const index = this.findMessageIndex(id)
         if (index !== -1) {
             const isLast = index === this.messages.value.length - 1
-            this.messages.value.splice(index, 1)
             if (isLast) {
                 // If scrolled to bottom and remove last item, container size change isn't smooth
-                // TODO randomly fail
-                // this.scrollEvent.emit()
+                this.scrollEvent.emit(this.messages.value.length - 2)
             }
+            this.messages.value.splice(index, 1)
         }
     }
 

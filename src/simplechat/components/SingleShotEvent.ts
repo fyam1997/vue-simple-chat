@@ -1,5 +1,5 @@
 export class SingleShotEvent<T> {
-    private observers: ((value: T) => void)[] = []
+    private observers: Observer<T>[] = []
 
     emit(value: T) {
         this.observers.forEach(observer => {
@@ -7,7 +7,9 @@ export class SingleShotEvent<T> {
         })
     }
 
-    observe(observer: () => void) {
+    observe(observer: Observer<T>) {
         this.observers.push(observer)
     }
 }
+
+type Observer<T> = (value: T) => void

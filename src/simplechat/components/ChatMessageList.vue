@@ -10,10 +10,11 @@ const viewModel = inject<ChatViewModel>("viewModel")
 const messages = viewModel.messages
 const loading = viewModel.loading
 
-viewModel.scrollEvent.observe(() => {
+viewModel.scrollEvent.observe((index) => {
+  // add delay to avoid item pushed but not yet rendered
   setTimeout(() => {
     const msgList = messageItemsRef.value
-    msgList.at(-1).$el.scrollIntoView({behavior: "smooth", block: "end"})
+    msgList.at(index).$el.scrollIntoView({behavior: "smooth", block: "end"})
   }, 50)
 })
 

@@ -14,5 +14,7 @@ import ChatInputField from "@/simplechat/components/ChatInputField.vue";
 </template>
 
 <style>
-
+* {
+  scrollbar-gutter:stable;
+}
 </style>
