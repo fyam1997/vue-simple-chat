@@ -1,6 +1,6 @@
 <script setup lang="ts">
 
-import {computed, inject} from "vue";
+import {computed, inject, toRaw} from "vue";
 import {ChatViewModel} from "@/simplechat/components/ChatViewModel.ts";
 import APIConfigDialog from "@/shared/apiconfig/APIConfigDialog.vue";
 import {ChatIndex} from "@/simplechat/storage/ChatStorage.ts";
@@ -39,6 +39,19 @@ function addNewConfig() {
   store.id.value = newID
 }
 
+function cloneConfig() {
+  // TODO think a better way for deep clone
+  // TODO give each message new id
+  const oldMessages = viewModel.messages.value.map(item => Object.assign({}, item))
+  const newID = Date.now()
+  idList.value.push({id: newID, name: ""})
+  store.id.value = newID
+  // TODO since watch(key, load) will try to read value from DB, if no value, it will save default value, the saving is happen after this
+  setTimeout(() => {
+    viewModel.messages.value = oldMessages
+  }, 100)
+}
+
 function deleteConfig() {
   if (idList.value.length > 1) {
     const deleteID = store.id.value
@@ -68,20 +81,38 @@ function deleteConfig() {
           label="Chat"
           :disabled="loading"
       />
-      <v-btn
-          icon="md:note_add"
-          variant="plain"
-          @click="addNewConfig"
-          title="Add chat"
-          :disabled="loading"
-      />
-      <v-btn
-          icon="md:delete"
-          variant="plain"
-          @click="deleteConfig"
-          title="Delete chat"
-          :disabled="loading"
-      />
+      <!--TODO make it expandable with name setting-->
+      <v-menu>
+        <template #activator="{ props }">
+          <v-btn
+              v-bind="props"
+              icon="md:more_vert"
+              variant="plain"
+              :disabled="loading"
+              title="Chat options"
+          />
+        </template>
+        <v-list>
+          <v-list-item
+              prepend-icon="md:note_add"
+              @click="addNewConfig"
+              title="Add chat"
+              :disabled="loading"
+          />
+          <v-list-item
+              prepend-icon="md:file_copy"
+              @click="cloneConfig"
+              title="Clone chat"
+              :disabled="loading"
+          />
+          <v-list-item
+              prepend-icon="md:delete"
+              @click="deleteConfig"
+              title="Delete chat"
+              :disabled="loading"
+          />
+        </v-list>
+      </v-menu>
     </div>
     <v-text-field
         label="Chat name"
@@ -90,6 +121,7 @@ function deleteConfig() {
         hide-details
         v-model="selectedItem.name"
     />
+    <v-divider/>
     <APIConfigDialog/>
     <v-select
         label="Role"
