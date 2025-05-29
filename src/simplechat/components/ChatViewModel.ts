@@ -26,7 +26,7 @@ export class ChatViewModel {
     }
 
     async sendMessage() {
-        if (!this.inputModel.value.message) {
+        if (this.loading.value || !this.inputModel.value.message) {
             return
         }
 
