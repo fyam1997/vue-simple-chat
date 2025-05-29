@@ -19,9 +19,7 @@ const editing = ref(false)
 </script>
 
 <template>
-  <v-card
-      variant="text"
-  >
+  <div>
     <div class="d-flex flex-row align-end flex-wrap">
       <v-select
           v-model="props.message.role"
@@ -71,14 +69,17 @@ const editing = ref(false)
         hide-details
         @keydown.ctrl.enter.exact="editing=false"
     />
-    <v-card-text
+    <div
         v-else
         key="display"
         v-html="display"
         class="overflow-auto"
     />
-  </v-card>
+  </div>
 </template>
 
 <style scoped>
+:deep(ul), :deep(ol) {
+  padding-left: 1rem;
+}
 </style>
