@@ -81,7 +81,6 @@ function deleteConfig() {
           label="Chat"
           :disabled="loading"
       />
-      <!--TODO make it expandable with name setting-->
       <v-menu>
         <template #activator="{ props }">
           <v-btn

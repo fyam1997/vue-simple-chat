@@ -60,7 +60,7 @@ const tab = ref("chat-panel")
 
 <style scoped>
 .config-panel-large {
-  max-width: 300px;
+  max-width: 400px;
 }
 
 .chat-panel-large {
