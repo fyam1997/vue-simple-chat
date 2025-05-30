@@ -130,13 +130,11 @@ function deleteConfig() {
         variant="underlined"
         hide-details
         density="compact"
-        :disabled="loading"
         class="flex-grow-0"
     />
     <v-checkbox
         v-model="inputModel.generateOnSend"
         label="Generate on send"
-        :disabled="loading"
         hide-details
     />
 
