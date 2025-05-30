@@ -18,7 +18,7 @@ const theme = computed(() => {
 })
 
 const screenWidth = useWindowSize().width
-const largeScreen = computed(() => screenWidth.value >= 700)
+const largeScreen = computed(() => screenWidth.value >= 950)
 
 const tab = ref("chat-panel")
 
