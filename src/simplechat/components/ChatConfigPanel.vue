@@ -1,6 +1,6 @@
 <script setup lang="ts">
 
-import {computed, inject, toRaw} from "vue";
+import {computed, inject} from "vue";
 import {ChatViewModel} from "@/simplechat/components/ChatViewModel.ts";
 import APIConfigDialog from "@/shared/apiconfig/APIConfigDialog.vue";
 import {ChatIndex} from "@/simplechat/storage/ChatStorage.ts";

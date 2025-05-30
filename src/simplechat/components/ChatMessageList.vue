@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import ChatMessageCell from "@/simplechat/components/ChatMessageCell.vue";
-import {computed, inject, useTemplateRef} from "vue";
+import {inject, useTemplateRef} from "vue";
 import {ChatViewModel} from "@/simplechat/components/ChatViewModel.ts";
 
 const messageItemsRef = useTemplateRef("messages-items")

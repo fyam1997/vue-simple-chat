@@ -1,12 +1,6 @@
 <script setup lang="ts">
 import {inject} from "vue";
 import {ChatViewModel} from "@/simplechat/components/ChatViewModel.ts";
-
-export interface ChatConfigModel {
-  baseURL: string
-  apiKey: string
-  model: string
-}
 const viewModel = inject<ChatViewModel>("viewModel")
 const apiConfig = viewModel.apiConfig
 
