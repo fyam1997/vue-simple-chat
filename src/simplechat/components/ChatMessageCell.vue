@@ -13,6 +13,7 @@ const emits = defineEmits<{
   deleteMessage: []
 }>()
 
+marked.setOptions({ breaks: true })
 const display = computed(() => marked(props.message.content))
 const editing = ref(false)
 
@@ -79,7 +80,22 @@ const editing = ref(false)
 </template>
 
 <style scoped>
-:deep(ul), :deep(ol) {
-  padding-left: 1rem;
+/* pick from browser's default. TODO vuetify set all to none. try get rid of vuetify*/
+:deep(ol) {
+  display: block;
+  list-style-type: decimal;
+  margin-block-start: 1em;
+  margin-block-end: 1em;
+  padding-inline-start: 40px;
+  unicode-bidi: isolate;
+}
+
+:deep(ul) {
+  display: block;
+  list-style-type: disc;
+  margin-block-start: 1em;
+  margin-block-end: 1em;
+  padding-inline-start: 40px;
+  unicode-bidi: isolate;
 }
 </style>
