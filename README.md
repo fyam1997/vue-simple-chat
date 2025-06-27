@@ -27,3 +27,7 @@ npm install
 npm run build
 gh-pages -d dist -m "$(git rev-parse HEAD)"
 ```
+
+
+## Google sync api config
+add `.env`, and GOOGLE_CLIENT_ID
