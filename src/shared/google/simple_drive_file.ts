@@ -1,7 +1,8 @@
-import {authorizeDrive, logoutToken} from "./google_auth.ts";
+import {authorizeDrive, loadGoogleAuth, logoutToken} from "./google_auth.ts";
 import {createDriveTextFile, getDriveFile, getDriveFileID, updateDriveTextFile} from "./google_drive_api.ts";
 
 export async function getSimpleDriveFile(clientID: string, fileName: string): Promise<string> {
+    await loadGoogleAuth()
     const token = await authorizeDrive('https://www.googleapis.com/auth/drive.appdata', clientID)
     try {
         const id = await getDriveFileID(token, `name='${fileName}'`)
@@ -15,6 +16,7 @@ export async function getSimpleDriveFile(clientID: string, fileName: string): Pr
 }
 
 export async function setSimpleDriveFile(clientID: string, fileName: string, content: string): Promise<void> {
+    await loadGoogleAuth()
     const token = await authorizeDrive('https://www.googleapis.com/auth/drive.appdata', clientID)
     try {
         const id = await getDriveFileID(token, `name='${fileName}'`)

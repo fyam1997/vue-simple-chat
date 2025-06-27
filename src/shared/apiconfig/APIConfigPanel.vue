@@ -1,6 +1,7 @@
 <script setup lang="ts">
-import {computed, inject} from "vue";
+import {computed, inject, toRaw} from "vue";
 import {APIConfigIndex, APIConfigStorage} from "@/shared/apiconfig/APICondigStorage.ts";
+import {getSimpleDriveFile, setSimpleDriveFile} from "@/shared/google/simple_drive_file.ts";
 
 const store = inject<APIConfigStorage>("apiConfigStorage")
 const apiConfig = store.config
@@ -43,24 +44,34 @@ function deleteConfig() {
   }
 }
 
+async function setToDrive() {
+  const backup = await store.getAllConfigs()
+  await setSimpleDriveFile(__GOOGLE_CLIENT_ID__, "APIConfigs.json", JSON.stringify(backup))
+}
+
+async function getFromDrive() {
+  const text = await getSimpleDriveFile(__GOOGLE_CLIENT_ID__, "APIConfigs.json")
+  const backup = JSON.parse(text)
+  await store.setAllConfigs(backup)
+  window.location.reload()
+}
+
 </script>
 
 <template>
   <div class="d-flex flex-column ga-4">
-    <div>
-      <v-alert border="start">
-        Configuration is only saved in the browser.
-        Please clear API key before leave if you are using public devices.
-      </v-alert>
-    </div>
-    <div class="d-flex flex-row align-center">
-      <v-select
-          variant="outlined"
-          :model-value="selectedItem"
-          :items="idList"
-          :item-props="itemProps"
-          @update:model-value="itemSelected"
-          hide-details
+    <div class="d-flex flex-row align-self-end">
+      <v-btn
+          icon="md:backup"
+          variant="plain"
+          @click="setToDrive"
+          title="Upload to drive"
+      />
+      <v-btn
+          icon="md:cloud_download"
+          variant="plain"
+          @click="getFromDrive"
+          title="Download from drive"
       />
       <v-btn
           icon="md:note_add"
@@ -75,6 +86,14 @@ function deleteConfig() {
           title="Delete config"
       />
     </div>
+    <v-select
+        variant="outlined"
+        :model-value="selectedItem"
+        :items="idList"
+        :item-props="itemProps"
+        @update:model-value="itemSelected"
+        hide-details
+    />
     <v-text-field
         variant="outlined"
         label="Config name"

@@ -1,5 +1,5 @@
 import {ref} from "vue";
-import {removeSharedData, sharedData, SharedStore} from "@/shared/db/SharedStorage.ts";
+import {getSharedData, removeSharedData, setSharedData, sharedData, SharedStore} from "@/shared/db/SharedStorage.ts";
 
 export interface APIConfigModel {
     baseURL: string
@@ -10,6 +10,13 @@ export interface APIConfigModel {
 export interface APIConfigIndex {
     id: number
     name: string
+}
+
+export interface APIConfigBackup {
+    configs: {
+        config: APIConfigModel,
+        index: APIConfigIndex,
+    }[]
 }
 
 export class APIConfigStorage {
@@ -28,6 +35,30 @@ export class APIConfigStorage {
         {baseURL: "", apiKey: "", model: ""},
         SharedStore.APIConfig,
     )
+
+    async getAllConfigs(): Promise<APIConfigBackup> {
+        const configs = []
+        for (const index of this.idList.value) {
+            const config = await getSharedData(index.id, SharedStore.APIConfig)
+            configs.push({
+                index: index,
+                config: config
+            })
+        }
+        return {configs: configs}
+    }
+
+    async setAllConfigs(backup: APIConfigBackup): Promise<void> {
+        for (const item of backup.configs) {
+            const existingIndex = this.idList.value.findIndex(i => i.id === item.index.id)
+            if (existingIndex !== -1) {
+                this.idList.value[existingIndex] = item.index
+            } else {
+                this.idList.value.push(item.index)
+            }
+            await setSharedData(item.index.id, SharedStore.APIConfig, item.config)
+        }
+    }
 
     removeConfig(id: number) {
         removeSharedData(id, SharedStore.APIConfig).catch(console.error)
