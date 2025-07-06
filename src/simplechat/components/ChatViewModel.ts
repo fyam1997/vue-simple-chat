@@ -38,7 +38,7 @@ export class ChatViewModel {
         this.messages.value.push(newMsg)
 
         this.inputModel.value.message = ""
-        this.scrollEvent.emit(this.messages.value.length - 1)
+        this.scrollEvent.emit(newMsg.id)
         if (this.inputModel.value.generateOnSend) {
             await this.fetchApiResponse()
         }
@@ -84,8 +84,9 @@ export class ChatViewModel {
                     })
                 }
 
-                this.messages.value.at(-1).content += event.choices[0].delta.content
-                this.scrollEvent.emit(this.messages.value.length - 1)
+                const lastMsg = this.messages.value.at(-1)
+                lastMsg.content += event.choices[0].delta.content
+                this.scrollEvent.emit(lastMsg.id)
             }
         } catch (e) {
             this.snackbarMessages.value.push("Translation fail")
@@ -100,7 +101,8 @@ export class ChatViewModel {
             const isLast = index === this.messages.value.length - 1
             if (isLast) {
                 // If scrolled to bottom and remove last item, container size change isn't smooth
-                this.scrollEvent.emit(this.messages.value.length - 2)
+                const newLast = this.messages.value[index - 1]
+                this.scrollEvent.emit(newLast.id)
             }
             this.messages.value.splice(index, 1)
         }
