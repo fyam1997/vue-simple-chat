@@ -13,7 +13,7 @@ const emits = defineEmits<{
   deleteMessage: []
 }>()
 
-marked.setOptions({ breaks: true })
+marked.setOptions({breaks: true})
 const display = computed(() => marked(props.message.content))
 const editing = ref(false)
 
@@ -74,28 +74,21 @@ const editing = ref(false)
         v-else
         key="display"
         v-html="display"
-        class="overflow-auto"
+        class="overflow-auto chat-message-html"
     />
   </div>
 </template>
 
 <style scoped>
-/* pick from browser's default. TODO vuetify set all to none. try get rid of vuetify*/
-:deep(ol) {
-  display: block;
-  list-style-type: decimal;
-  margin-block-start: 1em;
-  margin-block-end: 1em;
-  padding-inline-start: 40px;
-  unicode-bidi: isolate;
+/* revert vuetify's default style */
+.chat-message-html,
+.chat-message-html * {
+  margin: revert !important;
+  padding: revert !important;
 }
 
-:deep(ul) {
-  display: block;
-  list-style-type: disc;
-  margin-block-start: 1em;
-  margin-block-end: 1em;
-  padding-inline-start: 40px;
-  unicode-bidi: isolate;
+/* make code block self scrollable */
+:deep(pre) {
+  overflow: auto;
 }
 </style>
