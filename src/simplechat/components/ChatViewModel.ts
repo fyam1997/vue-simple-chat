@@ -38,8 +38,7 @@ export class ChatViewModel {
         this.messages.value.push(newMsg)
 
         this.inputModel.value.message = ""
-        // wait until element rendered
-        setTimeout(() => this.scrollEvent.emit(newMsg.id), 100)
+        this.scrollEvent.emit(newMsg.id)
 
         if (this.inputModel.value.generateOnSend) {
             await this.fetchApiResponse()

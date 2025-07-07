@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import ChatMessageCell from "@/simplechat/components/ChatMessageCell.vue";
-import {inject, useTemplateRef} from "vue";
+import {inject, nextTick, useTemplateRef} from "vue";
 import {ChatViewModel} from "@/simplechat/components/ChatViewModel.ts";
 
 const messageItemsRef = useTemplateRef("messages-items")
@@ -11,11 +11,13 @@ const messages = viewModel.messages
 const loading = viewModel.loading
 
 viewModel.scrollEvent.observe((id) => {
-  const msgList = messageItemsRef.value
-  const index = msgList.findIndex((item: any) => item.$props.message.id === id)
-  if (index !== -1) {
-    msgList.at(index).$el.scrollIntoView({behavior: "smooth", block: "end"})
-  }
+  nextTick(() => {
+    const msgList = messageItemsRef.value
+    const index = msgList.findIndex((item: any) => item.$props.message.id === id)
+    if (index !== -1) {
+      msgList.at(index).$el.scrollIntoView({behavior: "smooth", block: "end"})
+    }
+  })
 })
 
 </script>
