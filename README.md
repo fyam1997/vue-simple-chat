@@ -5,26 +5,26 @@ https://fyam1997.github.io/vue-simple-chat/
 ## Project Setup
 
 ```sh
-npm install
+pnpm install
 ```
 
 ### Compile and Hot-Reload for Development
 
 ```sh
-npm run dev
+pnpm run dev
 ```
 
 ### Compile and Minify for Production
 
 ```sh
-npm run build
+pnpm run build
 ```
 
 ### Deployment
 
 ```sh
-npm install
-npm run build
+pnpm install
+pnpm run build
 gh-pages -d dist -m "$(git rev-parse HEAD)"
 ```
 
