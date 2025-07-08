@@ -1,11 +1,12 @@
 <script setup lang="ts">
-import ChatMessagePanel from "@/simplechat/components/ChatMessagePanel.vue";
-import {ChatViewModel} from "@/simplechat/components/ChatViewModel.ts";
-import {computed, provide, ref} from "vue";
-import {useWindowSize} from "@vueuse/core";
-import ChatConfigPanel from "@/simplechat/components/ChatConfigPanel.vue";
-import {APIConfigStorage} from "@/shared/apiconfig/APICondigStorage.ts";
-import {ChatStorage} from "@/simplechat/storage/ChatStorage.ts";
+import ChatMessagePanel from "@/simplechat/components/ChatMessagePanel.vue"
+import {ChatViewModel} from "@/simplechat/components/ChatViewModel.ts"
+import {computed, provide, ref} from "vue"
+import {useWindowSize} from "@vueuse/core"
+import ChatConfigPanel from "@/simplechat/components/ChatConfigPanel.vue"
+import {APIConfigStorage} from "@/shared/apiconfig/APICondigStorage.ts"
+import {ChatStorage} from "@/simplechat/storage/ChatStorage.ts"
+import {GlobalEvents} from 'vue-global-events'
 
 const apiConfigStorage = new APIConfigStorage()
 const chatStorage = new ChatStorage()
@@ -22,10 +23,17 @@ const largeScreen = computed(() => screenWidth.value >= 950)
 
 const tab = ref("chat-panel")
 
+function regenerate() {
+  if (confirm("Regenerate?")) {
+    viewModel.fetchApiResponse()
+  }
+}
+
 </script>
 
 <template>
   <v-app :theme="theme">
+    <GlobalEvents @keyup.ctrl.enter.exact.prevent="regenerate"/>
     <v-snackbar-queue v-model="viewModel.snackbarMessages.value" location="top"></v-snackbar-queue>
     <div v-if="!largeScreen" class="w-100 h-100 d-flex flex-column">
       <div>

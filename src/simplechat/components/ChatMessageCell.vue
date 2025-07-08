@@ -68,7 +68,7 @@ const editing = ref(false)
         no-resize
         :readonly="loading"
         hide-details
-        @keydown.ctrl.enter.exact="editing=false"
+        @keydown.esc="editing=false"
     />
     <div
         v-else
