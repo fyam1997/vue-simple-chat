@@ -11,7 +11,7 @@ export class ChatViewModel {
     readonly messages: Ref<ChatMessageModel[]>
     readonly inputModel = useLocalStorage<ChatInputModel>(
         "input-model",
-        {role: "user", message: "", generateOnSend: false}
+        {role: "user", message: "", generateOnSend: false},
     )
     readonly apiConfig: Ref<APIConfigModel>
 
@@ -72,7 +72,7 @@ export class ChatViewModel {
             const completion = await client.chat.completions.create({
                 model: this.apiConfig.value.model,
                 messages: requestMessages,
-                stream: true
+                stream: true,
             })
             let firstReceived = false
             for await (const event of completion) {
@@ -99,13 +99,14 @@ export class ChatViewModel {
     deleteMessage(id: number) {
         const index = this.findMessageIndex(id)
         if (index !== -1) {
-            const isLast = index === this.messages.value.length - 1
-            if (isLast) {
+            const list = this.messages.value
+            const isLast = index === list.length - 1
+            if (isLast && list.length > 1) {
                 // If scrolled to bottom and remove last item, container size change isn't smooth
-                const newLast = this.messages.value[index - 1]
+                const newLast = list[index - 1]
                 this.scrollEvent.emit(newLast.id)
             }
-            this.messages.value.splice(index, 1)
+            list.splice(index, 1)
         }
     }
 
