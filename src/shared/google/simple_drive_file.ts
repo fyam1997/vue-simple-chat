@@ -25,13 +25,13 @@ export async function setSimpleDriveFile(clientID: string, fileName: string, con
                 id: id,
                 name: fileName,
                 content: content,
-                token: token
+                token: token,
             })
         } else {
             await createDriveTextFile({
                 name: fileName,
                 content: content,
-                token: token
+                token: token,
             })
         }
     } catch (error) {

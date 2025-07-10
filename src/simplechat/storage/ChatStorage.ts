@@ -41,7 +41,7 @@ function chatDB() {
     return openDB("Chat", 1, {
         upgrade(db) {
             db.createObjectStore(ChatStore.ChatMessages)
-        }
+        },
     })
 }
 
