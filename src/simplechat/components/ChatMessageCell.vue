@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import {ChatMessageModel} from "@/simplechat/storage/ChatStorage.ts";
+import {ChatMessageModel} from "@/simplechat/storage/ChatDB.ts";
 import {marked} from 'marked'
 import {computed, ref} from "vue";
 

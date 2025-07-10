@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import {inject} from "vue";
 import {ChatViewModel} from "@/simplechat/components/ChatViewModel.ts";
 
 export interface ChatInputModel {
@@ -8,7 +7,7 @@ export interface ChatInputModel {
     generateOnSend: boolean
 }
 
-const viewModel = inject<ChatViewModel>("viewModel")
+const viewModel = ChatViewModel.injectOrCreate()
 const inputModel = viewModel.inputModel
 const loading = viewModel.loading
 

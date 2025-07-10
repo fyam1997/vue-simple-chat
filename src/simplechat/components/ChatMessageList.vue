@@ -5,7 +5,7 @@ import {ChatViewModel} from "@/simplechat/components/ChatViewModel.ts";
 
 const messageItemsRef = useTemplateRef("messages-items")
 
-const viewModel = inject<ChatViewModel>("viewModel")
+const viewModel = ChatViewModel.injectOrCreate()
 
 const messages = viewModel.messages
 const loading = viewModel.loading
