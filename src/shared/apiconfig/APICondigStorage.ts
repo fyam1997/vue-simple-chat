@@ -42,7 +42,7 @@ export class APIConfigStorage {
             const config = await getSharedData(index.id, SharedStore.APIConfig)
             configs.push({
                 index: index,
-                config: config
+                config: config,
             })
         }
         return {configs: configs}
