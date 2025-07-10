@@ -32,6 +32,9 @@ importers:
       vue:
         specifier: ^3.5.13
         version: 3.5.17
+      vue-f-misc:
+        specifier: github:fyam1997/vue-f-misc#0.1.0-dev.4
+        version: https://codeload.github.com/fyam1997/vue-f-misc/tar.gz/60fdd16c1af9ae2cabc4a95fcecfee9b947a4833(idb@8.0.3)(material-design-icons-iconfont@6.7.0)(sortablejs@1.15.6)(vue@3.5.17)(vuetify@3.9.0(vue@3.5.17))
       vue-global-events:
         specifier: ^3.0.1
         version: 3.0.1(vue@3.5.17)
@@ -1159,6 +1162,9 @@ packages:
     resolution: {integrity: sha512-g9Q1haeby36OSStwb4ntCGGGaKsaVSjQ68fBxoQcutl5fS1vuY18H3wSt3jFyFtrkx+Kz0V1G85A4MyAdDMi2Q==}
     engines: {node: '>=8'}
 
+  sortablejs@1.15.6:
+    resolution: {integrity: sha512-aNfiuwMEpfBM/CN6LY0ibyhxPfPbyFeBTYJKCvzkJ2GkUpazIt3H+QIPAMHwqQ7tMKaHz1Qj+rJJCqljnf4p3A==}
+
   source-map-js@1.2.1:
     resolution: {integrity: sha512-UXWMKhLOwVKb728IUtQPXxfYU+usdybtUrK/8uGE8CQMvrhOpwvzDBwj0QhSL7MQc7vIsISBG8VQ8+IDQxpfQA==}
     engines: {node: '>=0.10.0'}
@@ -1283,6 +1289,16 @@ packages:
         optional: true
       yaml:
         optional: true
+
+  vue-f-misc@https://codeload.github.com/fyam1997/vue-f-misc/tar.gz/60fdd16c1af9ae2cabc4a95fcecfee9b947a4833:
+    resolution: {tarball: https://codeload.github.com/fyam1997/vue-f-misc/tar.gz/60fdd16c1af9ae2cabc4a95fcecfee9b947a4833}
+    version: 0.1.0-dev.4
+    peerDependencies:
+      idb: ^8.0.3
+      material-design-icons-iconfont: ^6.7.0
+      sortablejs: ^1.15.6
+      vue: ^3.4.0
+      vuetify: ^3.0.0
 
   vue-global-events@3.0.1:
     resolution: {integrity: sha512-9S7S3bG0XDBnpm2DJSSjpx6xIX/YIleycpnvmRRYSdiMltnzRfJQ8uVB3QX5eCLkmiv/Udg9UjO2wwpTO5LDvQ==}
@@ -2396,6 +2412,8 @@ snapshots:
 
   slash@3.0.0: {}
 
+  sortablejs@1.15.6: {}
+
   source-map-js@1.2.1: {}
 
   speakingurl@14.0.1: {}
@@ -2503,6 +2521,14 @@ snapshots:
     optionalDependencies:
       '@types/node': 18.19.116
       fsevents: 2.3.3
+
+  vue-f-misc@https://codeload.github.com/fyam1997/vue-f-misc/tar.gz/60fdd16c1af9ae2cabc4a95fcecfee9b947a4833(idb@8.0.3)(material-design-icons-iconfont@6.7.0)(sortablejs@1.15.6)(vue@3.5.17)(vuetify@3.9.0(vue@3.5.17)):
+    dependencies:
+      idb: 8.0.3
+      material-design-icons-iconfont: 6.7.0
+      sortablejs: 1.15.6
+      vue: 3.5.17
+      vuetify: 3.9.0(vue@3.5.17)
 
   vue-global-events@3.0.1(vue@3.5.17):
     dependencies:
