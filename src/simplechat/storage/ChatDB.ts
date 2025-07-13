@@ -1,4 +1,4 @@
-import {openDB} from "idb";
+import {openDB} from "idb"
 import {cachedDB, DBDataFlow} from "vue-f-misc"
 
 export enum ChatStore {

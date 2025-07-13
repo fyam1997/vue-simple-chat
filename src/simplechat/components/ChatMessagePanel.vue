@@ -1,7 +1,7 @@
 <script setup lang="ts">
 
-import ChatMessageList from "@/simplechat/components/ChatMessageList.vue";
-import ChatInputField from "@/simplechat/components/ChatInputField.vue";
+import ChatMessageList from "@/simplechat/components/ChatMessageList.vue"
+import ChatInputField from "@/simplechat/components/ChatInputField.vue"
 </script>
 
 <template>

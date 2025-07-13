@@ -1,7 +1,7 @@
 <script setup lang="ts">
 
-import {computed, inject} from "vue";
-import {ChatViewModel} from "@/simplechat/components/ChatViewModel.ts";
+import {computed} from "vue";
+import {ChatViewModel} from "@/simplechat/components/ChatViewModel"
 import {APIConfigDialog} from "vue-f-misc";
 
 const viewModel = ChatViewModel.injectOrCreate()

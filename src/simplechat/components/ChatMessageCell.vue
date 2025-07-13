@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import {ChatMessageModel} from "@/simplechat/storage/ChatDB.ts";
 import {marked} from 'marked'
-import {computed, ref} from "vue";
+import {computed, ref} from "vue"
+import {ChatMessageModel} from "@/simplechat/storage/Models"
 
 const props = defineProps<{
     message: ChatMessageModel,

@@ -5,8 +5,8 @@ import {APIConfigStore} from 'vue-f-misc'
 import ChatMessagePanel from "@/simplechat/components/ChatMessagePanel.vue"
 import ChatConfigPanel from "@/simplechat/components/ChatConfigPanel.vue"
 import {GlobalEvents} from 'vue-global-events'
-import {ChatViewModel} from "@/simplechat/components/ChatViewModel.ts"
-import {ChatStorage} from "@/simplechat/storage/Models.ts"
+import {ChatViewModel} from "@/simplechat/components/ChatViewModel"
+import {ChatStorage} from "@/simplechat/storage/Models"
 
 const apiConfigStore = new APIConfigStore(__GOOGLE_CLIENT_ID__)
 provide(APIConfigStore.KEY, apiConfigStore)

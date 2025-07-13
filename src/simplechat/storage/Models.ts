@@ -1,4 +1,4 @@
-import {chatData} from "@/simplechat/storage/ChatDB.ts"
+import {chatData} from "@/simplechat/storage/ChatDB"
 
 export interface ChatMessageModel {
     role: string

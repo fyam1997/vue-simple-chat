@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import {ChatViewModel} from "@/simplechat/components/ChatViewModel.ts";
+import {ChatViewModel} from "@/simplechat/components/ChatViewModel"
 
 export interface ChatInputModel {
     message: string
