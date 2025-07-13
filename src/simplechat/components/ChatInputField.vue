@@ -22,7 +22,7 @@ const loading = viewModel.loading
             max-rows="5"
             rows="1"
             no-resize
-            @keyup.enter.exact.prevent="viewModel.sendMessage()"
+            @keydown.enter.exact.prevent="viewModel.sendMessage()"
             hide-details
         >
             <template v-slot:append>
