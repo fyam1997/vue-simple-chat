@@ -155,41 +155,45 @@ export class ChatViewModel {
         this.darkTheme.value = !this.darkTheme.value
     }
 
-    selectChat(id: number) {
+    async selectChat(id: number) {
         this.id.value = id
-        this.chatStorage.chatMessages.setKey(id)
+        await this.chatStorage.chatMessages.setKey(id)
     }
 
     async addChat() {
         const newID = Date.now()
-        this.idList.value.push({id: newID, name: ""})
-        this.selectChat(newID)
+        this.idList.value.push({id: newID, name: "New Chat " + newID})
+        await this.selectChat(newID)
         this.messages.value = []
     }
 
     async cloneChat() {
         const oldMessages = this.messages.value.map(item => ({...item, id: Date.now() + Math.random()}))
         const newID = Date.now()
-        this.idList.value.push({id: newID, name: ""})
-        this.selectChat(newID)
-        setTimeout(() => {
-            this.messages.value = oldMessages
-        }, 100)
+        const baseName = this.selectedIndex.value.name
+        let count = 1
+        let newChatName = `${baseName} (${count})`
+        while (this.idList.value.some(item => item.name === newChatName)) {
+            count++
+            newChatName = `${baseName} (${count})`
+        }
+        this.idList.value.push({id: newID, name: newChatName})
+        await this.selectChat(newID)
+        this.messages.value = oldMessages
     }
 
     async deleteChat() {
-        if (this.idList.value.length > 1) {
-            const deleteID = this.id.value
-            const index = this.idList.value.findIndex(item => item.id === deleteID)
-            if (index !== -1) {
-                this.idList.value.splice(index, 1)
-                const newID = this.idList.value[0].id
-                this.selectChat(newID)
-                await this.chatStorage.chatMessages.emit([])
-            }
-        } else {
-            this.messages.value = []
+        const deleteID = this.id.value
+        await this.chatStorage.chatMessages.emit(undefined)
+        const list = this.idList.value
+        const index = list.findIndex(item => item.id === deleteID)
+        if (list.length === 1) {
+            await this.addChat()
         }
+        list.splice(index, 1)
+        const newIndex = Math.min(index, list.length - 1)
+        const newID = list[newIndex].id
+        await this.selectChat(newID)
     }
 
     static readonly KEY = Symbol("ChatViewModel")
