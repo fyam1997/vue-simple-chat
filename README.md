@@ -28,6 +28,13 @@ pnpm run build
 gh-pages -d dist -m "$(git rev-parse HEAD)"
 ```
 
-
 ## Google sync api config
+
 add `.env`, and GOOGLE_CLIENT_ID
+
+## TODO
+
+add switch, to control a msg sent or not
+scroll to bottom
+ctrl enter check loading
+view model provide use symbol
