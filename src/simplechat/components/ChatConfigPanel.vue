@@ -24,7 +24,7 @@ function onIndexSelected(value: any) {
 </script>
 
 <template>
-    <div class="d-flex flex-column ga-4 overflow-y-auto">
+    <div class="d-flex flex-column ga-4 overflow-y-auto pa-4">
         <div class="d-flex flex-row align-center">
             <v-combobox
                 variant="outlined"
