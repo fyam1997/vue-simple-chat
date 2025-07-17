@@ -185,7 +185,7 @@ export class ChatViewModel {
 
     async deleteChat() {
         const deleteID = this.id.value
-        await this.chatStorage.chatMessages.emit(undefined)
+        await this.chatStorage.chatMessages.delete()
         const list = this.idList.value
         const index = list.findIndex(item => item.id === deleteID)
         if (list.length === 1) {
