@@ -1,21 +1,21 @@
 <script setup lang="ts">
-import ChatMessageCell from "@/simplechat/components/ChatMessageCell.vue";
-import {inject, nextTick, useTemplateRef} from "vue";
-import {ChatViewModel} from "@/simplechat/components/ChatViewModel.ts";
+import ChatMessageCell from "@/simplechat/components/ChatMessageCell.vue"
+import {nextTick, useTemplateRef} from "vue"
+import {ChatViewModel} from "@/simplechat/components/ChatViewModel"
 
 const messageItemsRef = useTemplateRef("messages-items")
 
-const viewModel = inject<ChatViewModel>("viewModel")
+const viewModel = ChatViewModel.injectOrCreate()
 
 const messages = viewModel.messages
 const loading = viewModel.loading
 
 viewModel.scrollEvent.observe((id) => {
     nextTick(() => {
-        const msgList = messageItemsRef.value
+        const msgList = messageItemsRef.value!
         const index = msgList.findIndex((item: any) => item.$props.message.id === id)
         if (index !== -1) {
-            msgList.at(index).$el.scrollIntoView({behavior: "smooth", block: "end"})
+            msgList.at(index)!.$el.scrollIntoView({behavior: "smooth", block: "end"})
         }
     })
 })

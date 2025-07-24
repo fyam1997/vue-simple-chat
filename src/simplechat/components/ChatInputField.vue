@@ -1,6 +1,5 @@
 <script setup lang="ts">
-import {inject} from "vue";
-import {ChatViewModel} from "@/simplechat/components/ChatViewModel.ts";
+import {ChatViewModel} from "@/simplechat/components/ChatViewModel"
 
 export interface ChatInputModel {
     message: string
@@ -8,7 +7,7 @@ export interface ChatInputModel {
     generateOnSend: boolean
 }
 
-const viewModel = inject<ChatViewModel>("viewModel")
+const viewModel = ChatViewModel.injectOrCreate()
 const inputModel = viewModel.inputModel
 const loading = viewModel.loading
 
@@ -23,7 +22,7 @@ const loading = viewModel.loading
             max-rows="5"
             rows="1"
             no-resize
-            @keyup.enter.exact.prevent="viewModel.sendMessage()"
+            @keydown.enter.exact.prevent="viewModel.sendMessage()"
             hide-details
         >
             <template v-slot:append>

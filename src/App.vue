@@ -1,18 +1,22 @@
 <script setup lang="ts">
-import ChatMessagePanel from "@/simplechat/components/ChatMessagePanel.vue"
-import {ChatViewModel} from "@/simplechat/components/ChatViewModel.ts"
-import {computed, provide, ref} from "vue"
+import {computed, onMounted, provide, ref} from "vue"
 import {useWindowSize} from "@vueuse/core"
+import {APIConfigStore} from 'vue-f-misc'
+import ChatMessagePanel from "@/simplechat/components/ChatMessagePanel.vue"
 import ChatConfigPanel from "@/simplechat/components/ChatConfigPanel.vue"
-import {APIConfigStorage} from "@/shared/apiconfig/APICondigStorage.ts"
-import {ChatStorage} from "@/simplechat/storage/ChatStorage.ts"
 import {GlobalEvents} from 'vue-global-events'
+import {ChatViewModel} from "@/simplechat/components/ChatViewModel"
+import {ChatStorage} from "@/simplechat/storage/Models"
 
-const apiConfigStorage = new APIConfigStorage()
+const apiConfigStore = new APIConfigStore(__GOOGLE_CLIENT_ID__)
+provide(APIConfigStore.KEY, apiConfigStore)
+onMounted(() => apiConfigStore.init())
+
 const chatStorage = new ChatStorage()
-const viewModel = new ChatViewModel(apiConfigStorage, chatStorage)
-provide("viewModel", viewModel)
-provide("apiConfigStorage", apiConfigStorage)
+provide(ChatStorage.KEY, chatStorage)
+onMounted(() => chatStorage.init())
+
+const viewModel = ChatViewModel.injectOrCreate(apiConfigStore, chatStorage)
 
 const theme = computed(() => {
     return viewModel.darkTheme.value ? 'dark' : 'light'

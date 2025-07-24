@@ -1,3 +1,4 @@
+// TODO replace by observable
 export class SingleShotEvent<T> {
     private observers: Observer<T>[] = []
 
