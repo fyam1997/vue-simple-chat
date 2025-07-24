@@ -6,7 +6,9 @@
   "scripts": {
     "dev": "vite --host",
     "build": "vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "predeploy": "vite build",
+    "deploy": "node scripts/deploy.js"
   },
   "dependencies": {
     "@types/google.accounts": "^0.0.17",
