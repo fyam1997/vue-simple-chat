@@ -20,7 +20,7 @@ const viewModel = ChatViewModel.injectOrCreate(apiConfigStore, chatStorage)
 const loading = viewModel.loading
 
 const theme = computed(() => {
-    return viewModel.darkTheme.value ? 'dark' : 'light'
+  return viewModel.darkTheme.value ? 'dark' : 'light'
 })
 
 const screenWidth = useWindowSize().width
@@ -29,54 +29,54 @@ const largeScreen = computed(() => screenWidth.value >= 950)
 const tab = ref("chat-panel")
 
 function regenerate() {
-    if (!loading.value && confirm("Regenerate?")) {
-        viewModel.fetchApiResponse()
-    }
+  if (!loading.value && confirm("Regenerate?")) {
+    viewModel.fetchApiResponse()
+  }
 }
 
 </script>
 
 <template>
-    <v-app :theme="theme">
-        <GlobalEvents @keyup.ctrl.enter.exact.prevent="regenerate"/>
-        <v-snackbar-queue v-model="viewModel.snackbarMessages.value" location="top"></v-snackbar-queue>
-        <div v-if="!largeScreen" class="w-100 h-100 d-flex flex-column">
-            <div>
-                <v-tabs
-                    v-model="tab"
-                    fixed-tabs
-                    class="flex-grow-0"
-                >
-                    <v-tab value="config-panel" class="text-none">Config</v-tab>
-                    <v-tab value="chat-panel" class="text-none">Chats</v-tab>
-                </v-tabs>
-            </div>
-            <v-divider/>
-            <v-tabs-window v-model="tab" class="h-100 flex-grow-1">
-                <v-tabs-window-item value="config-panel" class="h-100">
-                    <ChatConfigPanel class="h-100"/>
-                </v-tabs-window-item>
+  <v-app :theme="theme">
+    <GlobalEvents @keyup.ctrl.enter.exact.prevent="regenerate"/>
+    <v-snackbar-queue v-model="viewModel.snackbarMessages.value" location="top"></v-snackbar-queue>
+    <div v-if="!largeScreen" class="w-100 h-100 d-flex flex-column">
+      <div>
+        <v-tabs
+            v-model="tab"
+            fixed-tabs
+            class="flex-grow-0"
+        >
+          <v-tab value="config-panel" class="text-none">Config</v-tab>
+          <v-tab value="chat-panel" class="text-none">Chats</v-tab>
+        </v-tabs>
+      </div>
+      <v-divider/>
+      <v-tabs-window v-model="tab" class="h-100 flex-grow-1">
+        <v-tabs-window-item value="config-panel" class="h-100">
+          <ChatConfigPanel class="h-100"/>
+        </v-tabs-window-item>
 
-                <v-tabs-window-item value="chat-panel" class="h-100">
-                    <ChatMessagePanel class="h-100"/>
-                </v-tabs-window-item>
-            </v-tabs-window>
-        </div>
+        <v-tabs-window-item value="chat-panel" class="h-100">
+          <ChatMessagePanel class="h-100"/>
+        </v-tabs-window-item>
+      </v-tabs-window>
+    </div>
 
-        <div v-else class="w-100 h-100 d-flex flex-row ga-2 justify-center">
-            <ChatConfigPanel class="config-panel-large w-100 h-100"/>
-            <v-divider vertical class="mt-4 mb-4"/>
-            <ChatMessagePanel class="chat-panel-large flex-grow-1 h-100 pb-4"/>
-        </div>
-    </v-app>
+    <div v-else class="w-100 h-100 d-flex flex-row ga-2 justify-center">
+      <ChatConfigPanel class="config-panel-large w-100 h-100"/>
+      <v-divider vertical class="mt-4 mb-4"/>
+      <ChatMessagePanel class="chat-panel-large flex-grow-1 h-100 pb-4"/>
+    </div>
+  </v-app>
 </template>
 
 <style scoped>
 .config-panel-large {
-    max-width: 400px;
+  max-width: 400px;
 }
 
 .chat-panel-large {
-    max-width: 600px;
+  max-width: 600px;
 }
 </style>
