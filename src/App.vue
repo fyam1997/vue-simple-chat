@@ -17,6 +17,7 @@ provide(ChatStorage.KEY, chatStorage)
 onMounted(() => chatStorage.init())
 
 const viewModel = ChatViewModel.injectOrCreate(apiConfigStore, chatStorage)
+const loading = viewModel.loading
 
 const theme = computed(() => {
     return viewModel.darkTheme.value ? 'dark' : 'light'
@@ -28,7 +29,7 @@ const largeScreen = computed(() => screenWidth.value >= 950)
 const tab = ref("chat-panel")
 
 function regenerate() {
-    if (confirm("Regenerate?")) {
+    if (!loading.value && confirm("Regenerate?")) {
         viewModel.fetchApiResponse()
     }
 }
@@ -53,19 +54,19 @@ function regenerate() {
             <v-divider/>
             <v-tabs-window v-model="tab" class="h-100 flex-grow-1">
                 <v-tabs-window-item value="config-panel" class="h-100">
-                    <ChatConfigPanel class="h-100 pa-4"/>
+                    <ChatConfigPanel class="h-100"/>
                 </v-tabs-window-item>
 
                 <v-tabs-window-item value="chat-panel" class="h-100">
-                    <ChatMessagePanel class="h-100 pl-4 pr-4"/>
+                    <ChatMessagePanel class="h-100"/>
                 </v-tabs-window-item>
             </v-tabs-window>
         </div>
 
         <div v-else class="w-100 h-100 d-flex flex-row ga-2 justify-center">
-            <ChatConfigPanel class="config-panel-large w-100 h-100 pa-4"/>
+            <ChatConfigPanel class="config-panel-large w-100 h-100"/>
             <v-divider vertical class="mt-4 mb-4"/>
-            <ChatMessagePanel class="chat-panel-large flex-grow-1 h-100 pl-4 pr-4 pb-4"/>
+            <ChatMessagePanel class="chat-panel-large flex-grow-1 h-100 pb-4"/>
         </div>
     </v-app>
 </template>

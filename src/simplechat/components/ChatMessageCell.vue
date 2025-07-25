@@ -1,4 +1,5 @@
 <script setup lang="ts">
+// TODO no loading check here, respond to specific id and not allow edit that one, other is free to edit
 import {marked} from 'marked'
 import {computed, ref} from "vue"
 import {ChatMessageModel} from "@/simplechat/storage/Models"
