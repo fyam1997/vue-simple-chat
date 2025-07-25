@@ -17,7 +17,7 @@ onLongPress(
     },
     {
         onMouseUp(duration: number, distance: number, isLongPress: boolean) {
-            if (!isLongPress) {
+            if (!isLongPress && !loading.value) {
                 viewModel.fetchApiResponse()
             }
         },

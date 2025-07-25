@@ -17,6 +17,7 @@ provide(ChatStorage.KEY, chatStorage)
 onMounted(() => chatStorage.init())
 
 const viewModel = ChatViewModel.injectOrCreate(apiConfigStore, chatStorage)
+const loading = viewModel.loading
 
 const theme = computed(() => {
     return viewModel.darkTheme.value ? 'dark' : 'light'
@@ -28,7 +29,7 @@ const largeScreen = computed(() => screenWidth.value >= 950)
 const tab = ref("chat-panel")
 
 function regenerate() {
-    if (confirm("Regenerate?")) {
+    if (!loading.value && confirm("Regenerate?")) {
         viewModel.fetchApiResponse()
     }
 }

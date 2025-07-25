@@ -11,6 +11,12 @@ const viewModel = ChatViewModel.injectOrCreate()
 const inputModel = viewModel.inputModel
 const loading = viewModel.loading
 
+function sendMessage() {
+    if (!loading.value) {
+        viewModel.sendMessage()
+    }
+}
+
 </script>
 
 <template>
@@ -22,7 +28,7 @@ const loading = viewModel.loading
             max-rows="5"
             rows="1"
             no-resize
-            @keydown.enter.exact.prevent="viewModel.sendMessage()"
+            @keydown.enter.exact.prevent="sendMessage"
             hide-details
         >
             <template v-slot:append>
@@ -31,7 +37,7 @@ const loading = viewModel.loading
                     variant="text"
                     :loading="loading"
                     title="send"
-                    @click="viewModel.sendMessage()"
+                    @click="sendMessage"
                 />
             </template>
         </v-textarea>
