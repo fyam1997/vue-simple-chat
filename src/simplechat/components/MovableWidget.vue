@@ -1,9 +1,9 @@
 <script setup lang="ts">
 import {computed, ref, useTemplateRef, watch} from "vue"
-import {useElementBounding} from "@vueuse/core"
+import {clamp, useElementBounding} from "@vueuse/core"
 
-// TODO add boundary
 // TODO add option to snap
+// TODO handle touch
 
 const widgetTop = ref(0)
 const widgetLeft = ref(0)
@@ -15,7 +15,7 @@ const widgetRef = useTemplateRef<HTMLElement>('widget')
 const widgetBounding = useElementBounding(widgetRef)
 
 /**
- * offset to get widget's position from mouse position
+ * offset to get widget's top left position from mouse position
  */
 const mousePositionOffset = computed(() => {
     return {
@@ -24,14 +24,43 @@ const mousePositionOffset = computed(() => {
     }
 })
 
-watch([dragAreaBounding.width, dragAreaBounding.height], ([width, height]) => {
-    setWidgetPosition(width - 64, height - 32)
+/**
+ * boundary of widget's top left position, relative to area
+ */
+const boundary = computed(() => {
+    const areaWidth = dragAreaBounding.width.value
+    const areaHeight = dragAreaBounding.height.value
+    const widgetWidth = widgetBounding.width.value
+    const widgetHeight = widgetBounding.height.value
+
+    return {
+        top: 0,
+        left: 0,
+        bottom: areaHeight - widgetHeight,
+        right: areaWidth - widgetWidth,
+    }
 })
 
-function setWidgetPosition(centerX: number, centerY: number) {
+
+watch([dragAreaBounding.width, dragAreaBounding.height], ([width, height]) => {
+    setWidgetPosition({x: width - 64, y: height - 64})
+})
+
+/**
+ * @param position - new top left position of the widget
+ */
+function setWidgetPosition(position: { x: number, y: number }) {
+    const boundaryValue = boundary.value
+    widgetLeft.value = clamp(position.x, boundaryValue.left, boundaryValue.right)
+    widgetTop.value = clamp(position.y, boundaryValue.top, boundaryValue.bottom)
+}
+
+function mouseToWidgetPosition(event: MouseEvent) {
     const offset = mousePositionOffset.value
-    widgetLeft.value = centerX - offset.x
-    widgetTop.value = centerY - offset.y
+    return {
+        x: event.clientX - offset.x,
+        y: event.clientY - offset.y,
+    }
 }
 
 function handleMouseDown(event: MouseEvent) {
@@ -41,7 +70,7 @@ function handleMouseDown(event: MouseEvent) {
 }
 
 function handleMouseMove(event: MouseEvent) {
-    setWidgetPosition(event.clientX, event.clientY)
+    setWidgetPosition(mouseToWidgetPosition(event))
 }
 
 function handleMouseUp() {
