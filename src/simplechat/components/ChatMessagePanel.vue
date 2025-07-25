@@ -27,7 +27,7 @@ onLongPress(
 
 <template>
     <div class="w-100 d-flex flex-column">
-        <div class="flex-1 position-relative overflow-hidden">
+        <div class="h-100 position-relative overflow-hidden">
             <ChatMessageList class="h-100 overflow-y-auto overflow-x-hidden msg-list pa-4 z-9999"/>
             <MovableWidget class="h-100 w-100 position-absolute top-0 left-0">
                 <v-icon-btn
