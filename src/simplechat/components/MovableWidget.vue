@@ -52,7 +52,7 @@ function setWidgetPosition(position: { x: number, y: number }) {
   widgetTop.value = clamp(position.y, boundaryValue.top, boundaryValue.bottom)
 }
 
-function mouseToWidgetPosition(event: MouseEvent) {
+function mouseToWidgetPosition(event: MouseEvent | Touch) {
   const offset = mousePositionOffset.value
   return {
     x: event.clientX - offset.x,
@@ -75,20 +75,37 @@ function snap(isLeft: boolean) {
   }
 }
 
-function handleMouseDown(event: MouseEvent) {
+function handleMouseDown(event: TouchEvent | MouseEvent) {
   event.preventDefault()
   window.addEventListener('mousemove', handleMouseMove)
   window.addEventListener('mouseup', handleMouseUp)
+  window.addEventListener('touchmove', handleMouseMove)
+  window.addEventListener('touchend', handleMouseUp)
 }
 
-function handleMouseMove(event: MouseEvent) {
-  setWidgetPosition(mouseToWidgetPosition(event))
+function handleMouseMove(event: TouchEvent | MouseEvent) {
+  if (event instanceof MouseEvent) {
+    setWidgetPosition(mouseToWidgetPosition(event))
+  } else {
+    if (event.touches.length > 0) {
+      setWidgetPosition(mouseToWidgetPosition(event.touches[0]))
+    }
+  }
 }
 
-function handleMouseUp(event: MouseEvent) {
-  snap(event.clientX < dragAreaBounding.x.value + dragAreaBounding.width.value / 2)
+function handleMouseUp(event: TouchEvent | MouseEvent) {
+  if (event instanceof MouseEvent) {
+    snap(event.clientX < dragAreaBounding.x.value + dragAreaBounding.width.value / 2)
+  } else {
+    if (event.touches.length === 0 && event.changedTouches.length > 0) {
+      const touch = event.changedTouches[0]
+      snap(touch.clientX < dragAreaBounding.x.value + dragAreaBounding.width.value / 2)
+    }
+  }
   window.removeEventListener('mousemove', handleMouseMove)
   window.removeEventListener('mouseup', handleMouseUp)
+  window.removeEventListener('touchmove', handleMouseMove)
+  window.removeEventListener('touchend', handleMouseUp)
 }
 </script>
 <template>
@@ -99,6 +116,7 @@ function handleMouseUp(event: MouseEvent) {
     <div ref="widget"
          class="movable-widget"
          @mousedown="handleMouseDown"
+         @touchstart="handleMouseDown"
     >
       <slot/>
     </div>
