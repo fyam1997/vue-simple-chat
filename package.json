@@ -11,10 +11,7 @@
     "deploy": "node scripts/deploy.js"
   },
   "dependencies": {
-    "@types/google.accounts": "^0.0.17",
     "@vueuse/core": "^13.1.0",
-    "dotenv": "^16.6.0",
-    "gh-pages": "^6.3.0",
     "idb": "^8.0.3",
     "marked": "^15.0.12",
     "openai": "^4.95.1",
@@ -24,6 +21,9 @@
     "vuetify": "^3.8.2"
   },
   "devDependencies": {
+    "@types/google.accounts": "^0.0.17",
+    "dotenv": "^16.6.0",
+    "gh-pages": "^6.3.0",
     "@vitejs/plugin-vue": "^5.2.3",
     "material-design-icons-iconfont": "^6.7.0",
     "prettier": "^3.6.2",
