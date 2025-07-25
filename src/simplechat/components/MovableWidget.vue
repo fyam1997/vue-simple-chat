@@ -2,7 +2,6 @@
 import {computed, ref, useTemplateRef, watch} from "vue"
 import {clamp, useElementBounding} from "@vueuse/core"
 
-// TODO add option to snap
 // TODO handle touch
 
 const widgetTop = ref(0)
@@ -40,10 +39,8 @@ const boundary = computed(() => {
         right: areaWidth - widgetWidth,
     }
 })
-
-
-watch([dragAreaBounding.width, dragAreaBounding.height], ([width, height]) => {
-    setWidgetPosition({x: width - 64, y: height - 64})
+watch([dragAreaBounding.width, dragAreaBounding.height], () => {
+    snap(false)
 })
 
 /**
@@ -63,6 +60,21 @@ function mouseToWidgetPosition(event: MouseEvent) {
     }
 }
 
+function snap(isLeft: boolean) {
+    const padding = 32
+    if (isLeft) {
+        setWidgetPosition({
+            x: padding,
+            y: dragAreaBounding.height.value - widgetBounding.height.value - padding,
+        })
+    } else {
+        setWidgetPosition({
+            x: dragAreaBounding.width.value - widgetBounding.width.value - padding,
+            y: dragAreaBounding.height.value - widgetBounding.height.value - padding,
+        })
+    }
+}
+
 function handleMouseDown(event: MouseEvent) {
     event.preventDefault()
     window.addEventListener('mousemove', handleMouseMove)
@@ -73,7 +85,8 @@ function handleMouseMove(event: MouseEvent) {
     setWidgetPosition(mouseToWidgetPosition(event))
 }
 
-function handleMouseUp() {
+function handleMouseUp(event: MouseEvent) {
+    snap(event.clientX < dragAreaBounding.x.value + dragAreaBounding.width.value / 2)
     window.removeEventListener('mousemove', handleMouseMove)
     window.removeEventListener('mouseup', handleMouseUp)
 }
