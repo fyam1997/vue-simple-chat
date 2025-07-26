@@ -30,6 +30,7 @@ function sendMessage() {
         no-resize
         @keydown.enter.exact.prevent="sendMessage"
         hide-details
+        density="compact"
     >
       <template v-slot:append>
         <v-icon-btn
