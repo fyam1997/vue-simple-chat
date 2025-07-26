@@ -25,6 +25,8 @@ function onIndexSelected(value: any) {
 
 <template>
   <div class="d-flex flex-column ga-4 overflow-y-auto pa-4">
+    <APIConfigDialog/>
+    <v-divider/>
     <div class="d-flex flex-row align-center">
       <v-combobox
           variant="outlined"
@@ -76,23 +78,6 @@ function onIndexSelected(value: any) {
         hide-details
         v-model="selectedIndex.name"
     />
-    <v-divider/>
-    <APIConfigDialog/>
-    <v-select
-        label="Role"
-        prepend-icon="md:person"
-        v-model="inputModel.role"
-        :items="['user', 'system', 'assistant']"
-        variant="underlined"
-        hide-details
-        density="compact"
-        class="flex-grow-0"
-    />
-    <v-checkbox
-        v-model="inputModel.generateOnSend"
-        label="Generate on send"
-        hide-details
-    />
 
     <v-spacer/>
     <v-divider/>
@@ -108,13 +93,6 @@ function onIndexSelected(value: any) {
         prepend-icon="md:bug_report"
         @click="viewModel.openBugReport()"
         title="Bug report"
-        class="text-none"
-        density="compact"
-    />
-    <v-list-item
-        prepend-icon="md:download"
-        @click="viewModel.downloadChats()"
-        title="Download"
         class="text-none"
         density="compact"
     />
