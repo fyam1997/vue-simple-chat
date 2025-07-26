@@ -34,13 +34,6 @@ function onIndexSelected(value: any) {
         variant="outlined"
         class="text-none w-100"
     />
-    <v-text-field
-        label="Chat name"
-        variant="outlined"
-        class="flex-grow-0"
-        hide-details
-        v-model="selectedIndex.name"
-    />
     <v-list class="flex-grow-1">
       <ChatIndexCell
           v-for="index in idList"
