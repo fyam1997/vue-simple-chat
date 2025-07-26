@@ -2,8 +2,6 @@
 import {computed, ref, useTemplateRef, watch} from "vue"
 import {clamp, useElementBounding} from "@vueuse/core"
 
-// TODO handle touch
-
 const widgetTop = ref(0)
 const widgetLeft = ref(0)
 

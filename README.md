@@ -43,3 +43,5 @@ add `.env`, and GOOGLE_CLIENT_ID
 [//]: # (TODO update chat config, index management)
 
 [//]: # (TODO keyboard navigation)
+
+[//]: # (TODO viewpager swap)

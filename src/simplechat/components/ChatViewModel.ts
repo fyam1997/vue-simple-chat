@@ -98,6 +98,7 @@ export class ChatViewModel {
 
                 const lastMsg = this.messages.value.at(-1)!
                 lastMsg.content += event.choices[0].delta.content
+                // TODO check if in bottom->scroll, above for 32px-> no scroll
                 this.scrollToBottom()
             }
         } catch (e) {
