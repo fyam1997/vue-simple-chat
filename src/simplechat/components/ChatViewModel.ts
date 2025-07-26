@@ -46,6 +46,7 @@ export class ChatViewModel {
     }
 
     async sendMessage() {
+        this.editedMessages()
         if (!this.inputModel.value.message) {
             return
         }
@@ -66,6 +67,7 @@ export class ChatViewModel {
     }
 
     async fetchApiResponse() {
+        this.editedMessages()
         const apiConfig = this.apiConfig.value
         if (!apiConfig.baseURL || !apiConfig.model) {
             this.snackbarMessages.value.push("API configuration is empty")
@@ -122,6 +124,7 @@ export class ChatViewModel {
     }
 
     deleteMessage(id: number) {
+        this.editedMessages()
         const index = this.findMessageIndex(id)
         if (index !== -1) {
             const list = this.messages.value
@@ -136,6 +139,7 @@ export class ChatViewModel {
     }
 
     insertBefore(id: number) {
+        this.editedMessages()
         const index = this.findMessageIndex(id)
         if (index !== -1) {
             const newMsg = {
@@ -222,6 +226,14 @@ export class ChatViewModel {
         const lastMsg = this.messages.value.at(-1)
         if (lastMsg) {
             this.scrollEvent.emit(lastMsg.id)
+        }
+    }
+
+    editedMessages() {
+        if (this.idList.value[0].id !== this.selectedIndex.value.id) {
+            const idx = this.idList.value.findIndex(item => item.id === this.selectedIndex.value.id)
+            const [item] = this.idList.value.splice(idx, 1)
+            this.idList.value.unshift(item)
         }
     }
 
