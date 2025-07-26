@@ -3,6 +3,7 @@
 import {computed} from "vue";
 import {ChatViewModel} from "@/simplechat/components/ChatViewModel"
 import {APIConfigDialog} from "vue-f-misc";
+import ChatIndexCell from "@/simplechat/components/ChatIndexCell.vue"
 
 const viewModel = ChatViewModel.injectOrCreate()
 const toggleThemeIcon = computed(() => {
@@ -41,33 +42,10 @@ function onIndexSelected(value: any) {
         v-model="selectedIndex.name"
     />
     <v-list class="flex-grow-1">
-      <v-list-item
+      <ChatIndexCell
           v-for="index in idList"
-          :title="index.name"
-          :key="index.id"
-          :active="selectedIndex.id === index.id"
-          @click="viewModel.selectChat(index.id)"
-      >
-        <div
-            class="d-flex flex-row"
-            v-if="selectedIndex.id === index.id"
-        >
-          <v-icon-btn
-              icon="md:file_copy"
-              @click.stop="viewModel.cloneChat(index)"
-              title="Clone chat"
-              :disabled="loading"
-              variant="text"
-          />
-          <v-icon-btn
-              icon="md:delete"
-              @click.stop="viewModel.deleteChat(index)"
-              title="Delete chat"
-              :disabled="loading"
-              variant="text"
-          />
-        </div>
-      </v-list-item>
+          :index="index"
+      />
     </v-list>
 
     <v-divider/>
