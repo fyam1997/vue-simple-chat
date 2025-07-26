@@ -20,8 +20,8 @@ function sendMessage() {
 </script>
 
 <template>
-  <div class="d-flex flex-column ga-2 pa-4">
     <v-textarea
+        class="pr-2 pb-4"
         variant="outlined"
         v-model="inputModel.message"
         auto-grow
@@ -30,7 +30,53 @@ function sendMessage() {
         no-resize
         @keydown.enter.exact.prevent="sendMessage"
         hide-details
+        density="compact"
     >
+      <template v-slot:prepend>
+        <v-menu :close-on-content-click="false">
+          <template #activator="{ props }">
+            <v-icon-btn
+                v-bind="props"
+                icon="md:more_vert"
+                variant="text"
+                :disabled="loading"
+                title="send options"
+            />
+          </template>
+          <v-list>
+            <v-list-item
+                prepend-icon="md:person"
+                class="text-none"
+                density="compact"
+            >
+              <template v-slot:default>
+                <v-select
+                    label="Role"
+                    v-model="inputModel.role"
+                    :items="['user', 'system', 'assistant']"
+                    variant="solo-filled"
+                    hide-details
+                    density="compact"
+                />
+              </template>
+            </v-list-item>
+            <v-checkbox
+                v-model="inputModel.generateOnSend"
+                hide-details
+                label="Generate on send"
+                density="compact"
+                class="pl-3"
+            />
+            <v-list-item
+                prepend-icon="md:download"
+                @click="viewModel.downloadChats()"
+                title="Download Chat"
+                class="text-none"
+                density="compact"
+            />
+          </v-list>
+        </v-menu>
+      </template>
       <template v-slot:append>
         <v-icon-btn
             icon="md:send"
@@ -41,9 +87,10 @@ function sendMessage() {
         />
       </template>
     </v-textarea>
-  </div>
 </template>
 
 <style scoped>
-
+:deep(.v-selection-control > .v-label--clickable) {
+  padding: 16px 32px;
+}
 </style>

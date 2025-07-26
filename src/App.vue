@@ -51,15 +51,15 @@ function regenerate() {
         </v-tabs>
       </div>
       <v-divider/>
-      <v-tabs-window v-model="tab" class="h-100 flex-grow-1">
-        <v-tabs-window-item value="config-panel" class="h-100">
+      <v-window v-model="tab" class="h-100 flex-grow-1" swipeable>
+        <v-window-item value="config-panel" class="h-100">
           <ChatConfigPanel class="h-100"/>
-        </v-tabs-window-item>
+        </v-window-item>
 
-        <v-tabs-window-item value="chat-panel" class="h-100">
+        <v-window-item value="chat-panel" class="h-100">
           <ChatMessagePanel class="h-100"/>
-        </v-tabs-window-item>
-      </v-tabs-window>
+        </v-window-item>
+      </v-window>
     </div>
 
     <div v-else class="w-100 h-100 d-flex flex-row ga-2 justify-center">

@@ -2,6 +2,7 @@
 import {marked} from 'marked'
 import {computed, ref} from "vue"
 import {ChatMessageModel} from "@/simplechat/storage/Models"
+import {ChatViewModel} from "@/simplechat/components/ChatViewModel"
 
 const props = defineProps<{
   message: ChatMessageModel,
@@ -17,6 +18,12 @@ marked.setOptions({breaks: true})
 const display = computed(() => marked(props.message.content))
 const editing = ref(false)
 
+const viewModel = ChatViewModel.injectOrCreate()
+
+function editClicked() {
+  viewModel.editedMessages()
+  editing.value = !editing.value
+}
 </script>
 
 <template>
@@ -35,7 +42,7 @@ const editing = ref(false)
           :icon="editing?'md:done':'md:edit'"
           variant="plain"
           size="small"
-          @click="editing=!editing"
+          @click="editClicked"
           :disabled="loading"
           title="insert above"
       />

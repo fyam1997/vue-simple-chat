@@ -2,9 +2,10 @@ import {useLocalStorage} from "@vueuse/core"
 import {computed, inject, provide, ref, Ref} from "vue"
 import {SingleShotEvent} from "@/simplechat/components/SingleShotEvent"
 import {APIConfigModel, APIConfigStore, useSharedFlow} from "vue-f-misc"
-import {ChatMessageModel, ChatStorage} from "@/simplechat/storage/Models"
+import {ChatIndex, ChatMessageModel, ChatStorage} from "@/simplechat/storage/Models"
 import {ChatInputModel} from "@/simplechat/components/ChatInputField.vue"
 import OpenAI from "openai"
+import {chatData} from "@/simplechat/storage/ChatDB"
 
 export class ChatViewModel {
     id
@@ -45,6 +46,7 @@ export class ChatViewModel {
     }
 
     async sendMessage() {
+        this.editedMessages()
         if (!this.inputModel.value.message) {
             return
         }
@@ -65,6 +67,7 @@ export class ChatViewModel {
     }
 
     async fetchApiResponse() {
+        this.editedMessages()
         const apiConfig = this.apiConfig.value
         if (!apiConfig.baseURL || !apiConfig.model) {
             this.snackbarMessages.value.push("API configuration is empty")
@@ -121,6 +124,7 @@ export class ChatViewModel {
     }
 
     deleteMessage(id: number) {
+        this.editedMessages()
         const index = this.findMessageIndex(id)
         if (index !== -1) {
             const list = this.messages.value
@@ -135,6 +139,7 @@ export class ChatViewModel {
     }
 
     insertBefore(id: number) {
+        this.editedMessages()
         const index = this.findMessageIndex(id)
         if (index !== -1) {
             const newMsg = {
@@ -183,12 +188,11 @@ export class ChatViewModel {
         await this.chatStorage.chatMessages.emit([])
     }
 
-    async cloneChat() {
-        const oldMessages = this.messages.value
-        const baseName = this.selectedIndex.value.name
-
-        await this.addChat(this.getClonedChatName(baseName))
-        this.messages.value = oldMessages
+    async cloneChat(index: ChatIndex) {
+        const target = chatData<ChatMessageModel[]>(index.id)
+        const oldMessages = await target.loadValue()
+        await this.addChat(this.getClonedChatName(index.name))
+        this.messages.value = oldMessages!
     }
 
     getClonedChatName(baseName: string) {
@@ -201,24 +205,35 @@ export class ChatViewModel {
         return newChatName
     }
 
-    async deleteChat() {
-        const deleteID = this.id.value
-        await this.chatStorage.chatMessages.delete()
+    async deleteChat(index: ChatIndex) {
+        const deleteID = index.id
+        await chatData<ChatMessageModel[]>(deleteID).delete()
+
         const list = this.idList.value
-        const index = list.findIndex(item => item.id === deleteID)
-        if (list.length === 1) {
+        const listIndex = list.findIndex(item => item.id === deleteID)
+        list.splice(listIndex, 1)
+
+        if (list.length === 0) {
             await this.addChat()
+        } else {
+            const newIndex = Math.min(listIndex, list.length - 1)
+            const newID = list[newIndex].id
+            await this.selectChat(newID)
         }
-        list.splice(index, 1)
-        const newIndex = Math.min(index, list.length - 1)
-        const newID = list[newIndex].id
-        await this.selectChat(newID)
     }
 
     scrollToBottom() {
         const lastMsg = this.messages.value.at(-1)
         if (lastMsg) {
             this.scrollEvent.emit(lastMsg.id)
+        }
+    }
+
+    editedMessages() {
+        if (this.idList.value[0].id !== this.selectedIndex.value.id) {
+            const idx = this.idList.value.findIndex(item => item.id === this.selectedIndex.value.id)
+            const [item] = this.idList.value.splice(idx, 1)
+            this.idList.value.unshift(item)
         }
     }
 
