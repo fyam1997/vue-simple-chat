@@ -167,27 +167,30 @@ export class ChatViewModel {
         this.scrollToBottom()
     }
 
-    async addChat() {
+    async addChat(name?: string) {
         const newID = Date.now()
-        this.idList.value.push({id: newID, name: "New Chat " + newID})
+        this.idList.value.push({id: newID, name: name ?? "New Chat " + newID})
         await this.selectChat(newID)
         // manually calling storage since [] same as default, won't trigger vue's watch
         await this.chatStorage.chatMessages.emit([])
     }
 
     async cloneChat() {
-        const oldMessages = this.messages.value.map(item => ({...item, id: Date.now() + Math.random()}))
-        const newID = Date.now()
+        const oldMessages = this.messages.value
         const baseName = this.selectedIndex.value.name
-        let count = 1
-        let newChatName = `${baseName} (${count})`
-        while (this.idList.value.some(item => item.name === newChatName)) {
-            count++
-            newChatName = `${baseName} (${count})`
-        }
-        this.idList.value.push({id: newID, name: newChatName})
-        await this.selectChat(newID)
+
+        await this.addChat(this.getClonedChatName(baseName))
         this.messages.value = oldMessages
+    }
+
+    getClonedChatName(baseName: string) {
+        let newChatName: string
+        let count = 1
+        do {
+            newChatName = `${baseName} (${count})`
+            count++
+        } while (this.idList.value.some(item => item.name === newChatName))
+        return newChatName
     }
 
     async deleteChat() {
