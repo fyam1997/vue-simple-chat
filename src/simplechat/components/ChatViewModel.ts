@@ -36,6 +36,14 @@ export class ChatViewModel {
         })
     }
 
+    async init() {
+        await Promise.all([
+            this.apiConfigStore.init(),
+            this.chatStorage.init(),
+        ])
+        this.scrollToBottom()
+    }
+
     async sendMessage() {
         if (!this.inputModel.value.message) {
             return
