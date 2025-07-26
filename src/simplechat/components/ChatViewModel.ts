@@ -1,10 +1,10 @@
 import {useLocalStorage} from "@vueuse/core"
 import {computed, inject, provide, ref, Ref} from "vue"
-import OpenAI from "openai"
 import {SingleShotEvent} from "@/simplechat/components/SingleShotEvent"
 import {APIConfigModel, APIConfigStore, useSharedFlow} from "vue-f-misc"
 import {ChatMessageModel, ChatStorage} from "@/simplechat/storage/Models"
 import {ChatInputModel} from "@/simplechat/components/ChatInputField.vue"
+import OpenAI from "openai"
 
 export class ChatViewModel {
     id
@@ -67,37 +67,15 @@ export class ChatViewModel {
         }
         this.loading.value = true
         try {
-            const client = new OpenAI({
-                baseURL: this.apiConfig.value.baseURL,
-                apiKey: this.apiConfig.value.apiKey,
-                dangerouslyAllowBrowser: true,
+            this.messages.value.push({
+                role: "assistant",
+                content: "",
+                id: Date.now(),
             })
-            // declare as any[] to suppress ChatCompletionMessageParam's warning
-            const requestMessages: any[] = this.messages.value.map((msg) => {
-                return {
-                    role: msg.role,
-                    content: msg.content,
-                }
-            })
-            const completion = await client.chat.completions.create({
-                model: this.apiConfig.value.model,
-                messages: requestMessages,
-                stream: true,
-            })
-            let firstReceived = false
-            for await (const event of completion) {
-                if (!firstReceived) {
-                    firstReceived = true
-                    // TODO keep ref of the target obj instead of flag
-                    this.messages.value.push({
-                        role: "assistant",
-                        content: "",
-                        id: Date.now(),
-                    })
-                }
 
-                const lastMsg = this.messages.value.at(-1)!
-                lastMsg.content += event.choices[0].delta.content
+            const receivedMsg = this.messages.value.at(-1)!
+            for await (const char of this.fetchChatCompletion()) {
+                receivedMsg.content += char
                 // TODO check if in bottom->scroll, above for 32px-> no scroll
                 this.scrollToBottom()
             }
@@ -106,6 +84,29 @@ export class ChatViewModel {
             console.error(e)
         }
         this.loading.value = false
+    }
+
+    async* fetchChatCompletion(): AsyncGenerator<string> {
+        const client = new OpenAI({
+            baseURL: this.apiConfig.value.baseURL,
+            apiKey: this.apiConfig.value.apiKey,
+            dangerouslyAllowBrowser: true,
+        })
+        // declare as any[] to suppress ChatCompletionMessageParam's warning
+        const requestMessages: any[] = this.messages.value.map((msg) => {
+            return {
+                role: msg.role,
+                content: msg.content,
+            }
+        })
+        const completion = await client.chat.completions.create({
+            model: this.apiConfig.value.model,
+            messages: requestMessages,
+            stream: true,
+        })
+        for await (const event of completion) {
+            yield* event.choices[0].delta.content ?? ""
+        }
     }
 
     deleteMessage(id: number) {
