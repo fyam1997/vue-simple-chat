@@ -171,7 +171,8 @@ export class ChatViewModel {
         const newID = Date.now()
         this.idList.value.push({id: newID, name: "New Chat " + newID})
         await this.selectChat(newID)
-        this.messages.value = []
+        // manually calling storage since [] same as default, won't trigger vue's watch
+        await this.chatStorage.chatMessages.emit([])
     }
 
     async cloneChat() {
