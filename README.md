@@ -40,10 +40,6 @@ add `.env`, and GOOGLE_CLIENT_ID
 
 [//]: # (TODO add branch button)
 
-[//]: # (TODO scroll to bottom)
-
-[//]: # (TODO ctrl enter check loading)
-
-[//]: # (TODO view model provide use symbol)
-
 [//]: # (TODO update chat config, index management)
+
+[//]: # (TODO keyboard navigation)

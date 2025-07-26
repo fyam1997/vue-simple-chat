@@ -98,7 +98,7 @@ export class ChatViewModel {
 
                 const lastMsg = this.messages.value.at(-1)!
                 lastMsg.content += event.choices[0].delta.content
-                this.scrollEvent.emit(lastMsg.id)
+                this.scrollToBottom()
             }
         } catch (e) {
             this.snackbarMessages.value.push("Translation fail")
@@ -159,6 +159,7 @@ export class ChatViewModel {
     async selectChat(id: number) {
         this.id.value = id
         await this.chatStorage.chatMessages.setKey(id)
+        this.scrollToBottom()
     }
 
     async addChat() {
@@ -195,6 +196,13 @@ export class ChatViewModel {
         const newIndex = Math.min(index, list.length - 1)
         const newID = list[newIndex].id
         await this.selectChat(newID)
+    }
+
+    scrollToBottom() {
+        const lastMsg = this.messages.value.at(-1)
+        if (lastMsg) {
+            this.scrollEvent.emit(lastMsg.id)
+        }
     }
 
     static readonly KEY = Symbol("ChatViewModel")
