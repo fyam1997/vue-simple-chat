@@ -54,14 +54,14 @@ function onIndexSelected(value: any) {
         >
           <v-icon-btn
               icon="md:file_copy"
-              @click="viewModel.cloneChat()"
+              @click.stop="viewModel.cloneChat(index)"
               title="Clone chat"
               :disabled="loading"
               variant="text"
           />
           <v-icon-btn
               icon="md:delete"
-              @click="viewModel.deleteChat()"
+              @click.stop="viewModel.deleteChat(index)"
               title="Delete chat"
               :disabled="loading"
               variant="text"
