@@ -159,6 +159,7 @@ export class ChatViewModel {
     async selectChat(id: number) {
         this.id.value = id
         await this.chatStorage.chatMessages.setKey(id)
+        this.scrollToBottom()
     }
 
     async addChat() {
@@ -198,8 +199,10 @@ export class ChatViewModel {
     }
 
     scrollToBottom() {
-        const lastMsg = this.messages.value.at(-1)!
-        this.scrollEvent.emit(lastMsg.id)
+        const lastMsg = this.messages.value.at(-1)
+        if (lastMsg) {
+            this.scrollEvent.emit(lastMsg.id)
+        }
     }
 
     static readonly KEY = Symbol("ChatViewModel")
