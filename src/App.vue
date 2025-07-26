@@ -10,13 +10,12 @@ import {ChatStorage} from "@/simplechat/storage/Models"
 
 const apiConfigStore = new APIConfigStore(__GOOGLE_CLIENT_ID__)
 provide(APIConfigStore.KEY, apiConfigStore)
-onMounted(() => apiConfigStore.init())
 
 const chatStorage = new ChatStorage()
 provide(ChatStorage.KEY, chatStorage)
-onMounted(() => chatStorage.init())
 
 const viewModel = ChatViewModel.injectOrCreate(apiConfigStore, chatStorage)
+onMounted(()=>viewModel.init())
 const loading = viewModel.loading
 
 const theme = computed(() => {

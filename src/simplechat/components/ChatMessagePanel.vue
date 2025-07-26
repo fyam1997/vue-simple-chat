@@ -5,7 +5,7 @@ import ChatInputField from "@/simplechat/components/ChatInputField.vue"
 import {ChatViewModel} from "@/simplechat/components/ChatViewModel"
 import MovableWidget from "@/simplechat/components/MovableWidget.vue"
 import {onLongPress, useElementSize, useScroll, VueInstance} from "@vueuse/core"
-import {computed, useTemplateRef} from "vue"
+import {computed, useTemplateRef, watch} from "vue"
 
 const viewModel = ChatViewModel.injectOrCreate()
 const loading = viewModel.loading
@@ -25,19 +25,32 @@ onLongPress(
 
 const msgListContainerRef = useTemplateRef<HTMLDivElement>('msg-list-container')
 const msgListRef = useTemplateRef<VueInstance>('msg-list')
-const scrollYRef = useScroll(msgListContainerRef).y
+const scrollRef = useScroll(msgListContainerRef)
 const scrollHeightRef = useElementSize(msgListRef).height
 const scrollContainerHeightRef = useElementSize(msgListContainerRef).height
 
+const remainingScroll = computed(() => {
+  const scrollY = scrollRef.y.value
+  const scrollHeight = scrollHeightRef.value
+  const containerHeight = scrollContainerHeightRef.value
+  return scrollHeight - containerHeight - scrollY
+})
+watch(scrollHeightRef, () => {
+  console.debug('remeasure scroll height')
+  scrollRef.measure()
+})
 /**
  * if there is half of page size can scroll, show scroll to bottom button
  */
 const showScrollToBottom = computed(() => {
-  const scrollY = scrollYRef.value
-  const scrollHeight = scrollHeightRef.value
   const containerHeight = scrollContainerHeightRef.value
-  const remainingScroll = scrollHeight - containerHeight - scrollY
-  return remainingScroll > containerHeight / 2
+  return remainingScroll.value > containerHeight / 2
+})
+/**
+ * consider scroll to bottom if remaining scroll is less than 64px
+ */
+watch(remainingScroll, (scroll) => {
+  viewModel.scrolledToBottom.value = scroll < 128
 })
 </script>
 

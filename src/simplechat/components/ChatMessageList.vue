@@ -26,10 +26,10 @@ viewModel.scrollEvent.observe((id) => {
   <div class="position-relative">
     <TransitionGroup>
       <ChatMessageCell
-          v-for="msg in messages"
+          v-for="(msg, index) in messages"
           :key="msg.id"
           :message="msg"
-          :loading="loading"
+          :loading="loading && index === messages.length-1"
           @deleteMessage="viewModel.deleteMessage(msg.id)"
           @insertBefore="viewModel.insertBefore(msg.id)"
           ref="messages-items"

@@ -1,10 +1,10 @@
 import {useLocalStorage} from "@vueuse/core"
 import {computed, inject, provide, ref, Ref} from "vue"
-import OpenAI from "openai"
 import {SingleShotEvent} from "@/simplechat/components/SingleShotEvent"
 import {APIConfigModel, APIConfigStore, useSharedFlow} from "vue-f-misc"
 import {ChatMessageModel, ChatStorage} from "@/simplechat/storage/Models"
 import {ChatInputModel} from "@/simplechat/components/ChatInputField.vue"
+import OpenAI from "openai"
 
 export class ChatViewModel {
     id
@@ -23,6 +23,7 @@ export class ChatViewModel {
 
     readonly scrollEvent = new SingleShotEvent<number>()
     readonly snackbarMessages = ref<string[]>([])
+    readonly scrolledToBottom = ref(false)
 
     constructor(public apiConfigStore: APIConfigStore, public chatStorage: ChatStorage) {
         this.apiConfig = useSharedFlow(apiConfigStore.config, {baseURL: "", apiKey: "", model: ""}, {deep: true})
@@ -33,6 +34,14 @@ export class ChatViewModel {
             const found = this.idList.value.find(item => item.id === this.id.value)
             return found || {id: 0, name: ""}
         })
+    }
+
+    async init() {
+        await Promise.all([
+            this.apiConfigStore.init(),
+            this.chatStorage.init(),
+        ])
+        this.scrollToBottom()
     }
 
     async sendMessage() {
@@ -67,44 +76,48 @@ export class ChatViewModel {
         }
         this.loading.value = true
         try {
-            const client = new OpenAI({
-                baseURL: this.apiConfig.value.baseURL,
-                apiKey: this.apiConfig.value.apiKey,
-                dangerouslyAllowBrowser: true,
+            this.messages.value.push({
+                role: "assistant",
+                content: "",
+                id: Date.now(),
             })
-            // declare as any[] to suppress ChatCompletionMessageParam's warning
-            const requestMessages: any[] = this.messages.value.map((msg) => {
-                return {
-                    role: msg.role,
-                    content: msg.content,
-                }
-            })
-            const completion = await client.chat.completions.create({
-                model: this.apiConfig.value.model,
-                messages: requestMessages,
-                stream: true,
-            })
-            let firstReceived = false
-            for await (const event of completion) {
-                if (!firstReceived) {
-                    firstReceived = true
-                    // TODO keep ref of the target obj instead of flag
-                    this.messages.value.push({
-                        role: "assistant",
-                        content: "",
-                        id: Date.now(),
-                    })
-                }
 
-                const lastMsg = this.messages.value.at(-1)!
-                lastMsg.content += event.choices[0].delta.content
-                this.scrollToBottom()
+            const receivedMsg = this.messages.value.at(-1)!
+            for await (const char of this.fetchChatCompletion()) {
+                const isEmpty = receivedMsg.content === ""
+                receivedMsg.content += char
+                if (isEmpty || this.scrolledToBottom.value) {
+                    this.scrollToBottom()
+                }
             }
         } catch (e) {
             this.snackbarMessages.value.push("Translation fail")
             console.error(e)
         }
         this.loading.value = false
+    }
+
+    async* fetchChatCompletion(): AsyncGenerator<string> {
+        const client = new OpenAI({
+            baseURL: this.apiConfig.value.baseURL,
+            apiKey: this.apiConfig.value.apiKey,
+            dangerouslyAllowBrowser: true,
+        })
+        // declare as any[] to suppress ChatCompletionMessageParam's warning
+        const requestMessages: any[] = this.messages.value.map((msg) => {
+            return {
+                role: msg.role,
+                content: msg.content,
+            }
+        })
+        const completion = await client.chat.completions.create({
+            model: this.apiConfig.value.model,
+            messages: requestMessages,
+            stream: true,
+        })
+        for await (const event of completion) {
+            yield* event.choices[0].delta.content ?? ""
+        }
     }
 
     deleteMessage(id: number) {
@@ -162,26 +175,30 @@ export class ChatViewModel {
         this.scrollToBottom()
     }
 
-    async addChat() {
+    async addChat(name?: string) {
         const newID = Date.now()
-        this.idList.value.push({id: newID, name: "New Chat " + newID})
+        this.idList.value.push({id: newID, name: name ?? "New Chat " + newID})
         await this.selectChat(newID)
-        this.messages.value = []
+        // manually calling storage since [] same as default, won't trigger vue's watch
+        await this.chatStorage.chatMessages.emit([])
     }
 
     async cloneChat() {
-        const oldMessages = this.messages.value.map(item => ({...item, id: Date.now() + Math.random()}))
-        const newID = Date.now()
+        const oldMessages = this.messages.value
         const baseName = this.selectedIndex.value.name
-        let count = 1
-        let newChatName = `${baseName} (${count})`
-        while (this.idList.value.some(item => item.name === newChatName)) {
-            count++
-            newChatName = `${baseName} (${count})`
-        }
-        this.idList.value.push({id: newID, name: newChatName})
-        await this.selectChat(newID)
+
+        await this.addChat(this.getClonedChatName(baseName))
         this.messages.value = oldMessages
+    }
+
+    getClonedChatName(baseName: string) {
+        let newChatName: string
+        let count = 1
+        do {
+            newChatName = `${baseName} (${count})`
+            count++
+        } while (this.idList.value.some(item => item.name === newChatName))
+        return newChatName
     }
 
     async deleteChat() {
