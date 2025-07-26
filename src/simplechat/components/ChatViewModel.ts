@@ -23,6 +23,7 @@ export class ChatViewModel {
 
     readonly scrollEvent = new SingleShotEvent<number>()
     readonly snackbarMessages = ref<string[]>([])
+    readonly scrolledToBottom = ref(false)
 
     constructor(public apiConfigStore: APIConfigStore, public chatStorage: ChatStorage) {
         this.apiConfig = useSharedFlow(apiConfigStore.config, {baseURL: "", apiKey: "", model: ""}, {deep: true})
@@ -75,9 +76,11 @@ export class ChatViewModel {
 
             const receivedMsg = this.messages.value.at(-1)!
             for await (const char of this.fetchChatCompletion()) {
+                const isEmpty = receivedMsg.content === ""
                 receivedMsg.content += char
-                // TODO check if in bottom->scroll, above for 32px-> no scroll
-                this.scrollToBottom()
+                if (isEmpty || this.scrolledToBottom.value) {
+                    this.scrollToBottom()
+                }
             }
         } catch (e) {
             this.snackbarMessages.value.push("Translation fail")
