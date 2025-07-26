@@ -40,8 +40,10 @@ add `.env`, and GOOGLE_CLIENT_ID
 
 [//]: # (TODO add branch button)
 
-[//]: # (TODO update chat config, index management)
-
 [//]: # (TODO keyboard navigation)
 
-[//]: # (TODO viewpager swap)
+[//]: # (TODO download with chat name)
+
+[//]: # (TODO lock a chat, all comming msg will be single ans)
+
+[//]: # (TODO refactor msg list modification, send a Operation, better for undo)
