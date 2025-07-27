@@ -30,7 +30,6 @@ function editClicked() {
           variant="plain"
           hide-details
           density="compact"
-          :disabled="loading"
           class="flex-grow-0"
       />
       <v-spacer/>
@@ -40,7 +39,6 @@ function editClicked() {
             variant="plain"
             size="small"
             @click="editClicked"
-            :disabled="loading"
             title="insert above"
         />
         <v-icon-btn
@@ -48,7 +46,6 @@ function editClicked() {
             variant="plain"
             size="small"
             @click="viewModel.insertMessage(message.id)"
-            :disabled="loading"
             title="insert above"
         />
         <v-divider vertical class="ma-2"/>
@@ -57,7 +54,6 @@ function editClicked() {
             variant="plain"
             size="small"
             @click="viewModel.deleteMessage(message.id)"
-            :disabled="loading"
             title="delete"
         />
       </div>
