@@ -40,7 +40,12 @@ function deleteClicked(needConfirm: boolean) {
       :ripple="false"
   >
     <template v-slot:title>
-      <v-list-item-title v-if="!editingName">{{ displayName }}</v-list-item-title>
+      <v-list-item-title
+          v-if="!editingName"
+          :title="displayName"
+      >
+        {{ displayName }}
+      </v-list-item-title>
       <v-text-field
           v-else
           ref="name-edit"
