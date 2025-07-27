@@ -46,12 +46,15 @@ function deleteClicked(needConfirm: boolean) {
       >
         {{ displayName }}
       </v-list-item-title>
-      <v-text-field
+      <v-textarea
           v-else
           ref="name-edit"
           label="Chat name"
           variant="underlined"
           hide-details
+          single-line
+          auto-grow
+          rows="1"
           autofocus
           @keydown.enter.exact="editingName=false"
           @keydown.esc.exact="editingName=false"
