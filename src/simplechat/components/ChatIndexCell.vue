@@ -23,6 +23,12 @@ const displayName = computed(() => {
 const editingName = ref(false)
 const selected = computed(() => selectedIndex.value.id === props.index.id)
 watch(selected, () => editingName.value = false)
+
+function deleteClicked(needConfirm: boolean) {
+  if (!needConfirm || confirm("Delete this chat?")) {
+    viewModel.deleteChat(props.index)
+  }
+}
 </script>
 
 <template>
@@ -72,7 +78,9 @@ watch(selected, () => editingName.value = false)
       <v-divider vertical class="ma-2"/>
       <v-icon-btn
           :disabled="loading"
-          @click.stop="viewModel.deleteChat(index)"
+          @click.exact.stop="deleteClicked(true)"
+          @click.ctrl.stop="deleteClicked(false)"
+          @click.meta.stop="deleteClicked(false)"
           icon="md:delete"
           size="small"
           title="Delete chat"
