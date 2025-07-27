@@ -175,6 +175,9 @@ export class ChatViewModel {
     }
 
     async selectChat(id: number) {
+        if (this.id.value === id) {
+            return
+        }
         this.id.value = id
         await this.chatStorage.chatMessages.setKey(id)
         this.scrollToBottom()

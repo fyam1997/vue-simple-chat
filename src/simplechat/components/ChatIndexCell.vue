@@ -31,6 +31,7 @@ watch(selected, () => editingName.value = false)
       :active="selected"
       :disabled="loading"
       @click="viewModel.selectChat(index.id)"
+      :ripple="false"
   >
     <template v-slot:title>
       <v-list-item-title v-if="!editingName">{{ displayName }}</v-list-item-title>
@@ -43,6 +44,7 @@ watch(selected, () => editingName.value = false)
           autofocus
           @keydown.enter.exact="editingName=false"
           @keydown.esc.exact="editingName=false"
+          @click.stop
           v-model="selectedIndex.name"
       />
     </template>
@@ -54,7 +56,7 @@ watch(selected, () => editingName.value = false)
       <v-icon-btn
           :disabled="loading"
           :icon="editingName?'md:done':'md:edit'"
-          @click="editingName = !editingName"
+          @click.stop="editingName = !editingName"
           size="small"
           title="insert above"
           variant="plain"

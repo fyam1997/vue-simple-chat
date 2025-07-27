@@ -75,7 +75,7 @@ function editClicked() {
         no-resize
         :readonly="loading"
         hide-details
-        @keydown.esc="editing=false"
+        @keydown.esc.exact="editing=false"
     />
     <div
         v-else
