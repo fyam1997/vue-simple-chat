@@ -188,7 +188,7 @@ export class ChatViewModel {
 
     async addChat(name?: string) {
         const newID = Date.now()
-        this.idList.value.push({id: newID, name: name ?? "New Chat " + newID})
+        this.idList.value.unshift({id: newID, name: name ?? "New Chat " + newID})
         await this.selectChat(newID)
         // manually calling storage since [] same as default, won't trigger vue's watch
         await this.chatStorage.chatMessages.emit([])
