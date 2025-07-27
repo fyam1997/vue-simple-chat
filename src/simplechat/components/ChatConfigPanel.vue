@@ -9,18 +9,9 @@ const viewModel = ChatViewModel.injectOrCreate()
 const toggleThemeIcon = computed(() => {
   return viewModel.darkTheme.value ? 'md:light_mode' : 'md:dark_mode'
 })
-const inputModel = viewModel.inputModel
 const loading = viewModel.loading
-const selectedIndex = viewModel.selectedIndex
 const appVersion = __APP_VERSION__
 const idList = viewModel.idList
-
-function onIndexSelected(value: any) {
-  if (value && typeof value === "object" && "id" in value) {
-    viewModel.selectChat(value.id)
-  }
-}
-
 </script>
 
 <template>
