@@ -20,6 +20,7 @@ export class ChatViewModel {
     readonly apiConfig: Ref<APIConfigModel>
 
     readonly loading = ref(false)
+    stopGenerationFlag = false
 
     readonly scrollEvent = new SharedFlow<number>()
     readonly snackbarMessages = ref<string[]>([])
@@ -86,6 +87,9 @@ export class ChatViewModel {
 
             const receivedMsg = this.messages.value.at(-1)!
             for await (const char of this.fetchChatCompletion()) {
+                if (this.stopGenerationFlag) {
+                    break
+                }
                 const isEmpty = receivedMsg.content === ""
                 receivedMsg.content += char
                 if (isEmpty || this.scrolledToBottom.value) {
@@ -237,6 +241,11 @@ export class ChatViewModel {
             const [item] = this.idList.value.splice(idx, 1)
             this.idList.value.unshift(item)
         }
+    }
+
+    stopGenerate() {
+        this.stopGenerationFlag = true
+        this.loading.value = false
     }
 
     static readonly KEY = Symbol("ChatViewModel")
