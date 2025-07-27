@@ -9,22 +9,13 @@ const viewModel = ChatViewModel.injectOrCreate()
 const toggleThemeIcon = computed(() => {
   return viewModel.darkTheme.value ? 'md:light_mode' : 'md:dark_mode'
 })
-const inputModel = viewModel.inputModel
 const loading = viewModel.loading
-const selectedIndex = viewModel.selectedIndex
 const appVersion = __APP_VERSION__
 const idList = viewModel.idList
-
-function onIndexSelected(value: any) {
-  if (value && typeof value === "object" && "id" in value) {
-    viewModel.selectChat(value.id)
-  }
-}
-
 </script>
 
 <template>
-  <div class="d-flex flex-column ga-4 overflow-y-auto pa-4">
+  <div class="d-flex flex-column ga-4 pa-4">
     <APIConfigDialog/>
     <v-btn
         prepend-icon="md:note_add"
@@ -34,14 +25,15 @@ function onIndexSelected(value: any) {
         variant="outlined"
         class="text-none w-100"
     />
-    <v-list class="flex-grow-1">
-      <ChatIndexCell
-          v-for="index in idList"
-          :index="index"
-      />
-    </v-list>
-
-    <v-divider/>
+    <div class="flex-grow-1 overflow-y-hidden">
+      <v-list class="overflow-y-auto h-100">
+        <ChatIndexCell
+            v-for="index in idList"
+            :index="index"
+        />
+      </v-list>
+      <v-divider/>
+    </div>
 
     <div class="d-flex flex-row justify-end flex-wrap">
       <v-label class="text-caption pl-2" :text="'version: '+appVersion"/>

@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import {ChatViewModel} from "@/simplechat/components/ChatViewModel"
+import {load} from "signal-exit"
 
 export interface ChatInputModel {
   message: string
@@ -79,17 +80,25 @@ function sendMessage() {
       </template>
       <template v-slot:append>
         <v-icon-btn
+            v-if="!loading"
             icon="md:send"
             variant="text"
-            :loading="loading"
             title="send"
             @click="sendMessage"
+        />
+        <v-icon-btn
+            v-else
+            icon="md:stop"
+            variant="text"
+            title="Stop"
+            @click="viewModel.stopGenerate()"
         />
       </template>
     </v-textarea>
 </template>
 
 <style scoped>
+/*noinspection CssUnusedSymbol*/
 :deep(.v-selection-control > .v-label--clickable) {
   padding: 16px 32px;
 }

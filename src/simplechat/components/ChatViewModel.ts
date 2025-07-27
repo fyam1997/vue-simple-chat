@@ -1,7 +1,6 @@
 import {useLocalStorage} from "@vueuse/core"
 import {computed, inject, provide, ref, Ref} from "vue"
-import {SingleShotEvent} from "@/simplechat/components/SingleShotEvent"
-import {APIConfigModel, APIConfigStore, useSharedFlow} from "vue-f-misc"
+import {APIConfigModel, APIConfigStore, SharedFlow, useSharedFlow} from "vue-f-misc"
 import {ChatIndex, ChatMessageModel, ChatStorage} from "@/simplechat/storage/Models"
 import {ChatInputModel} from "@/simplechat/components/ChatInputField.vue"
 import OpenAI from "openai"
@@ -21,8 +20,9 @@ export class ChatViewModel {
     readonly apiConfig: Ref<APIConfigModel>
 
     readonly loading = ref(false)
+    stopGenerationFlag = false
 
-    readonly scrollEvent = new SingleShotEvent<number>()
+    readonly scrollEvent = new SharedFlow<number>()
     readonly snackbarMessages = ref<string[]>([])
     readonly scrolledToBottom = ref(false)
 
@@ -42,7 +42,7 @@ export class ChatViewModel {
             this.apiConfigStore.init(),
             this.chatStorage.init(),
         ])
-        this.scrollToBottom()
+        await this.scrollToBottom()
     }
 
     async sendMessage() {
@@ -59,7 +59,7 @@ export class ChatViewModel {
         this.messages.value.push(newMsg)
 
         this.inputModel.value.message = ""
-        this.scrollEvent.emit(newMsg.id)
+        await this.scrollEvent.emit(newMsg.id)
 
         if (this.inputModel.value.generateOnSend) {
             await this.fetchApiResponse()
@@ -87,10 +87,13 @@ export class ChatViewModel {
 
             const receivedMsg = this.messages.value.at(-1)!
             for await (const char of this.fetchChatCompletion()) {
+                if (this.stopGenerationFlag) {
+                    break
+                }
                 const isEmpty = receivedMsg.content === ""
                 receivedMsg.content += char
                 if (isEmpty || this.scrolledToBottom.value) {
-                    this.scrollToBottom()
+                    await this.scrollToBottom()
                 }
             }
         } catch (e) {
@@ -123,7 +126,7 @@ export class ChatViewModel {
         }
     }
 
-    deleteMessage(id: number) {
+    async deleteMessage(id: number) {
         this.editedMessages()
         const index = this.findMessageIndex(id)
         if (index !== -1) {
@@ -132,7 +135,7 @@ export class ChatViewModel {
             if (isLast && list.length > 1) {
                 // If scrolled to bottom and remove last item, container size change isn't smooth
                 const newLast = list[index - 1]
-                this.scrollEvent.emit(newLast.id)
+                await this.scrollEvent.emit(newLast.id)
             }
             list.splice(index, 1)
         }
@@ -161,7 +164,7 @@ export class ChatViewModel {
         const url = URL.createObjectURL(blob)
         const a = document.createElement("a")
         a.href = url
-        a.download = "chats.json"
+        a.download = `${this.selectedIndex.value.name}.json`
         a.click()
         URL.revokeObjectURL(url)
     }
@@ -175,9 +178,12 @@ export class ChatViewModel {
     }
 
     async selectChat(id: number) {
+        if (this.id.value === id) {
+            return
+        }
         this.id.value = id
         await this.chatStorage.chatMessages.setKey(id)
-        this.scrollToBottom()
+        await this.scrollToBottom()
     }
 
     async addChat(name?: string) {
@@ -222,10 +228,10 @@ export class ChatViewModel {
         }
     }
 
-    scrollToBottom() {
+    async scrollToBottom() {
         const lastMsg = this.messages.value.at(-1)
         if (lastMsg) {
-            this.scrollEvent.emit(lastMsg.id)
+            await this.scrollEvent.emit(lastMsg.id)
         }
     }
 
@@ -235,6 +241,11 @@ export class ChatViewModel {
             const [item] = this.idList.value.splice(idx, 1)
             this.idList.value.unshift(item)
         }
+    }
+
+    stopGenerate() {
+        this.stopGenerationFlag = true
+        this.loading.value = false
     }
 
     static readonly KEY = Symbol("ChatViewModel")

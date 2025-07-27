@@ -10,7 +10,7 @@ const viewModel = ChatViewModel.injectOrCreate()
 const messages = viewModel.messages
 const loading = viewModel.loading
 
-viewModel.scrollEvent.observe((id) => {
+viewModel.scrollEvent.collect((id) => {
   nextTick(() => {
     const msgList = messageItemsRef.value!
     const index = msgList.findIndex((item: any) => item.$props.message.id === id)
