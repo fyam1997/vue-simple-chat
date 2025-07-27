@@ -30,11 +30,21 @@ viewModel.scrollEvent.collect((id) => {
           :key="msg.id"
           :message="msg"
           :loading="loading && index === messages.length-1"
-          @deleteMessage="viewModel.deleteMessage(msg.id)"
-          @insertBefore="viewModel.insertBefore(msg.id)"
           ref="messages-items"
           class="w-100 pl-2 pr-2 pb-4 mt-4"
       />
+      <div class="d-flex flex-row align-center pt-4 pb-4" key="insert last">
+        <v-divider class="ml-4 mr-4"/>
+        <v-icon-btn
+            icon="md:add"
+            variant="plain"
+            size="small"
+            @click="viewModel.insertMessage()"
+            :disabled="loading"
+            title="insert message"
+        />
+        <v-divider class="ml-4 mr-4"/>
+      </div>
     </TransitionGroup>
   </div>
 </template>

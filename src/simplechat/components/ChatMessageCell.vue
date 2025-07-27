@@ -9,11 +9,6 @@ const props = defineProps<{
   loading: boolean,
 }>()
 
-const emits = defineEmits<{
-  insertBefore: []
-  deleteMessage: []
-}>()
-
 marked.setOptions({breaks: true})
 const display = computed(() => marked(props.message.content))
 const editing = ref(false)
@@ -52,7 +47,7 @@ function editClicked() {
             icon="md:add"
             variant="plain"
             size="small"
-            @click="emits('insertBefore')"
+            @click="viewModel.insertMessage(message.id)"
             :disabled="loading"
             title="insert above"
         />
@@ -61,7 +56,7 @@ function editClicked() {
             icon="md:delete"
             variant="plain"
             size="small"
-            @click="emits('deleteMessage')"
+            @click="viewModel.deleteMessage(message.id)"
             :disabled="loading"
             title="delete"
         />
