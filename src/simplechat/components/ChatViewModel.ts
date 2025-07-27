@@ -15,7 +15,7 @@ export class ChatViewModel {
     readonly messages: Ref<ChatMessageModel[]>
     readonly inputModel = useLocalStorage<ChatInputModel>(
         "input-model",
-        {role: "user", message: "", generateOnSend: false},
+        {message: ""},
     )
     readonly apiConfig: Ref<APIConfigModel>
 
@@ -47,23 +47,18 @@ export class ChatViewModel {
 
     async sendMessage() {
         this.editedMessages()
-        if (!this.inputModel.value.message) {
-            return
-        }
+        if (this.inputModel.value.message) {
+            const newMsg = {
+                role: 'user',
+                content: this.inputModel.value.message,
+                id: Date.now(),
+            }
+            this.messages.value.push(newMsg)
 
-        const newMsg = {
-            role: this.inputModel.value.role,
-            content: this.inputModel.value.message,
-            id: Date.now(),
+            this.inputModel.value.message = ""
+            await this.scrollEvent.emit(newMsg.id)
         }
-        this.messages.value.push(newMsg)
-
-        this.inputModel.value.message = ""
-        await this.scrollEvent.emit(newMsg.id)
-
-        if (this.inputModel.value.generateOnSend) {
-            await this.fetchApiResponse()
-        }
+        await this.fetchApiResponse()
     }
 
     async fetchApiResponse() {
@@ -138,7 +133,7 @@ export class ChatViewModel {
     async insertMessage(id?: number) {
         this.editedMessages()
         const newMsg = {
-            role: this.inputModel.value.role,
+            role: 'user',
             content: "",
             id: Date.now(),
         }
