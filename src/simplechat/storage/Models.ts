@@ -17,7 +17,6 @@ export class ChatStorage {
     chatMessages = chatData<ChatMessageModel[]>(0)
 
     async init() {
-        // TODO might have a common class with api config index
         const list = await this.idList.loadValue()
         if (list === undefined) {
             const newID = Date.now()
