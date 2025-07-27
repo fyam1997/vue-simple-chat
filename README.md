@@ -44,8 +44,6 @@ add `.env`, and GOOGLE_CLIENT_ID
 
 [//]: # (ctrl+up/down to navigate msgs, L to lock chat til current msg, enter to edit, ctrl)
 
-[//]: # (TODO download with chat name)
-
 [//]: # (TODO lock a chat, all comming msg will be single ans)
 
 [//]: # (TODO refactor msg list modification, send a Operation, better for undo. kind of like redux's action)
