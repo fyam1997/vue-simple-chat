@@ -90,6 +90,7 @@ function sendMessage() {
 </template>
 
 <style scoped>
+/*noinspection CssUnusedSymbol*/
 :deep(.v-selection-control > .v-label--clickable) {
   padding: 16px 32px;
 }
