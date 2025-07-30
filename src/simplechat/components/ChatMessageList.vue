@@ -12,7 +12,10 @@ const loading = viewModel.loading
 
 viewModel.scrollEvent.collect((id) => {
   nextTick(() => {
-    const msgList = messageItemsRef.value!
+    const msgList = messageItemsRef.value
+    if (!msgList) {
+      return
+    }
     const index = msgList.findIndex((item: any) => item.$props.message.id === id)
     if (index !== -1) {
       msgList.at(index)!.$el.scrollIntoView({behavior: "smooth", block: "end"})
