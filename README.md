@@ -60,3 +60,9 @@ add `.env`, and GOOGLE_CLIENT_ID
 
 [//]: # (TODO extract all scroll controlling to separate view model)
 
+[//]: # (TODO auto scroll if loading in UI)
+
+[//]: # (TODO mobile enter dont send)
+
+[//]: # (TODO after fail or stop, no message)
+
