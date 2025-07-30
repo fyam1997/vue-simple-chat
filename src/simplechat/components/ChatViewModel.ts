@@ -1,4 +1,4 @@
-import { useLocalStorage } from "@vueuse/core"
+import { useLocalStorage, useWindowSize } from "@vueuse/core"
 import { computed, inject, provide, ref, Ref } from "vue"
 import {
     APIConfigModel,
@@ -33,6 +33,9 @@ export class ChatViewModel {
     readonly scrollEvent = new SharedFlow<number>()
     readonly snackbarMessages = ref<string[]>([])
     readonly scrolledToBottom = ref(false)
+
+    screenWidth = useWindowSize().width
+    largeScreen = computed(() => this.screenWidth.value >= 950)
 
     constructor(
         public apiConfigStore: APIConfigStore,

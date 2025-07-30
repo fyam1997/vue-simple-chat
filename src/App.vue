@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { computed, onMounted, provide, ref } from "vue"
-import { useWindowSize } from "@vueuse/core"
-import { APIConfigStore } from "vue-f-misc"
+import {  APIConfigStore } from "vue-f-misc"
 import ChatMessagePanel from "@/simplechat/components/ChatMessagePanel.vue"
 import ChatConfigPanel from "@/simplechat/components/ChatConfigPanel.vue"
 import { GlobalEvents } from "vue-global-events"
@@ -22,9 +21,6 @@ const theme = computed(() => {
     return viewModel.darkTheme.value ? "dark" : "light"
 })
 
-const screenWidth = useWindowSize().width
-const largeScreen = computed(() => screenWidth.value >= 950)
-
 const tab = ref("chat-panel")
 
 function regenerate() {
@@ -41,7 +37,7 @@ function regenerate() {
             v-model="viewModel.snackbarMessages.value"
             location="top"
         ></v-snackbar-queue>
-        <div v-if="!largeScreen" class="w-100 h-100 d-flex flex-column">
+        <div v-if="!viewModel.largeScreen.value" class="w-100 h-100 d-flex flex-column">
             <div>
                 <v-tabs v-model="tab" fixed-tabs class="flex-grow-0">
                     <v-tab value="config-panel" class="text-none">Config</v-tab>

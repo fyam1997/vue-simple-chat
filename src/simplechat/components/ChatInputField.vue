@@ -14,6 +14,13 @@ function sendMessage() {
         viewModel.sendMessage()
     }
 }
+
+function onEnter(event: Event) {
+    if (viewModel.largeScreen.value) {
+        event.preventDefault()
+        sendMessage()
+    }
+}
 </script>
 
 <template>
@@ -25,7 +32,7 @@ function sendMessage() {
         max-rows="5"
         rows="1"
         no-resize
-        @keydown.enter.exact.prevent="sendMessage"
+        @keydown.enter.exact="onEnter"
         hide-details
         density="compact"
     >
