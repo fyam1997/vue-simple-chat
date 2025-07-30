@@ -15,7 +15,7 @@ export class ChatViewModel {
     readonly messages: Ref<ChatMessageModel[]>
     readonly inputModel = useLocalStorage<ChatInputModel>(
         "input-model",
-        {role: "user", message: "", generateOnSend: false},
+        {message: ""},
     )
     readonly apiConfig: Ref<APIConfigModel>
 
@@ -47,23 +47,18 @@ export class ChatViewModel {
 
     async sendMessage() {
         this.editedMessages()
-        if (!this.inputModel.value.message) {
-            return
-        }
+        if (this.inputModel.value.message) {
+            const newMsg = {
+                role: 'user',
+                content: this.inputModel.value.message,
+                id: Date.now(),
+            }
+            this.messages.value.push(newMsg)
 
-        const newMsg = {
-            role: this.inputModel.value.role,
-            content: this.inputModel.value.message,
-            id: Date.now(),
+            this.inputModel.value.message = ""
+            await this.scrollEvent.emit(newMsg.id)
         }
-        this.messages.value.push(newMsg)
-
-        this.inputModel.value.message = ""
-        await this.scrollEvent.emit(newMsg.id)
-
-        if (this.inputModel.value.generateOnSend) {
-            await this.fetchApiResponse()
-        }
+        await this.fetchApiResponse()
     }
 
     async fetchApiResponse() {
@@ -131,27 +126,22 @@ export class ChatViewModel {
         const index = this.findMessageIndex(id)
         if (index !== -1) {
             const list = this.messages.value
-            const isLast = index === list.length - 1
-            if (isLast && list.length > 1) {
-                // If scrolled to bottom and remove last item, container size change isn't smooth
-                const newLast = list[index - 1]
-                await this.scrollEvent.emit(newLast.id)
-            }
             list.splice(index, 1)
         }
     }
 
-    insertBefore(id: number) {
+    async insertMessage(id?: number) {
         this.editedMessages()
-        const index = this.findMessageIndex(id)
-        if (index !== -1) {
-            const newMsg = {
-                role: this.inputModel.value.role,
-                content: this.inputModel.value.message,
-                id: Date.now(),
-            }
+        const newMsg = {
+            role: 'user',
+            content: "",
+            id: Date.now(),
+        }
+        if (id !== undefined) {
+            const index = this.findMessageIndex(id)
             this.messages.value.splice(index, 0, newMsg)
-            this.inputModel.value.message = ""
+        } else {
+            this.messages.value.push(newMsg)
         }
     }
 
@@ -188,7 +178,7 @@ export class ChatViewModel {
 
     async addChat(name?: string) {
         const newID = Date.now()
-        this.idList.value.push({id: newID, name: name ?? "New Chat " + newID})
+        this.idList.value.unshift({id: newID, name: name ?? "New Chat " + newID})
         await this.selectChat(newID)
         // manually calling storage since [] same as default, won't trigger vue's watch
         await this.chatStorage.chatMessages.emit([])

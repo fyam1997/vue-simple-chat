@@ -1,11 +1,8 @@
 <script setup lang="ts">
 import {ChatViewModel} from "@/simplechat/components/ChatViewModel"
-import {load} from "signal-exit"
 
 export interface ChatInputModel {
   message: string
-  role: string
-  generateOnSend: boolean
 }
 
 const viewModel = ChatViewModel.injectOrCreate()
@@ -45,29 +42,6 @@ function sendMessage() {
             />
           </template>
           <v-list>
-            <v-list-item
-                prepend-icon="md:person"
-                class="text-none"
-                density="compact"
-            >
-              <template v-slot:default>
-                <v-select
-                    label="Role"
-                    v-model="inputModel.role"
-                    :items="['user', 'system', 'assistant']"
-                    variant="solo-filled"
-                    hide-details
-                    density="compact"
-                />
-              </template>
-            </v-list-item>
-            <v-checkbox
-                v-model="inputModel.generateOnSend"
-                hide-details
-                label="Generate on send"
-                density="compact"
-                class="pl-3"
-            />
             <v-list-item
                 prepend-icon="md:download"
                 @click="viewModel.downloadChats()"

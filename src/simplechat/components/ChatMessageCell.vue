@@ -9,11 +9,6 @@ const props = defineProps<{
   loading: boolean,
 }>()
 
-const emits = defineEmits<{
-  insertBefore: []
-  deleteMessage: []
-}>()
-
 marked.setOptions({breaks: true})
 const display = computed(() => marked(props.message.content))
 const editing = ref(false)
@@ -27,42 +22,41 @@ function editClicked() {
 </script>
 
 <template>
-  <div>
+  <v-card variant="outlined">
     <div class="d-flex flex-row align-end flex-wrap">
       <v-select
           v-model="props.message.role"
           :items="['user', 'system', 'assistant']"
           variant="plain"
           hide-details
-          :disabled="loading"
+          density="compact"
           class="flex-grow-0"
       />
       <v-spacer/>
-      <v-icon-btn
-          :icon="editing?'md:done':'md:edit'"
-          variant="plain"
-          size="small"
-          @click="editClicked"
-          :disabled="loading"
-          title="insert above"
-      />
-      <v-icon-btn
-          icon="md:add"
-          variant="plain"
-          size="small"
-          @click="emits('insertBefore')"
-          :disabled="loading"
-          title="insert above"
-      />
-      <v-icon-btn
-          icon="md:close"
-          variant="plain"
-          size="small"
-          class="ml-4"
-          @click="emits('deleteMessage')"
-          :disabled="loading"
-          title="delete"
-      />
+      <div class="d-flex flex-row align-center">
+        <v-icon-btn
+            :icon="editing?'md:done':'md:edit'"
+            variant="plain"
+            size="small"
+            @click="editClicked"
+            title="insert above"
+        />
+        <v-icon-btn
+            icon="md:add"
+            variant="plain"
+            size="small"
+            @click="viewModel.insertMessage(message.id)"
+            title="insert above"
+        />
+        <v-divider vertical class="ma-2"/>
+        <v-icon-btn
+            icon="md:delete"
+            variant="plain"
+            size="small"
+            @click="viewModel.deleteMessage(message.id)"
+            title="delete"
+        />
+      </div>
     </div>
     <v-textarea
         v-if="editing"
@@ -83,7 +77,7 @@ function editClicked() {
         v-html="display"
         class="overflow-auto chat-message-html"
     />
-  </div>
+  </v-card>
 </template>
 
 <style scoped>

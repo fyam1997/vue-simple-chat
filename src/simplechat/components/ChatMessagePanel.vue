@@ -3,25 +3,10 @@
 import ChatMessageList from "@/simplechat/components/ChatMessageList.vue"
 import ChatInputField from "@/simplechat/components/ChatInputField.vue"
 import {ChatViewModel} from "@/simplechat/components/ChatViewModel"
-import MovableWidget from "@/simplechat/components/MovableWidget.vue"
-import {onLongPress, useElementSize, useScroll, VueInstance} from "@vueuse/core"
+import {useElementSize, useScroll, VueInstance} from "@vueuse/core"
 import {computed, useTemplateRef, watch} from "vue"
 
 const viewModel = ChatViewModel.injectOrCreate()
-const loading = viewModel.loading
-
-const generateButtonRef = useTemplateRef<VueInstance>('generateButtonRef')
-onLongPress(
-    generateButtonRef,
-    () => {
-    },
-    {
-      onMouseUp(duration: number, distance: number, isLongPress: boolean) {
-        if (!isLongPress && !loading.value) {
-          viewModel.fetchApiResponse()
-        }
-      },
-    })
 
 const msgListContainerRef = useTemplateRef<HTMLDivElement>('msg-list-container')
 const msgListRef = useTemplateRef<VueInstance>('msg-list')
@@ -63,16 +48,6 @@ watch(remainingScroll, (scroll) => {
       >
         <ChatMessageList ref="msg-list"/>
       </div>
-
-      <MovableWidget class="h-100 w-100 position-absolute top-0 left-0">
-        <v-btn
-            ref="generateButtonRef"
-            icon="md:chat_bubble"
-            variant="elevated"
-            :loading="loading"
-            title="generate response"
-        />
-      </MovableWidget>
 
       <v-btn
           v-if="showScrollToBottom"

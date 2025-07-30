@@ -46,9 +46,15 @@ add `.env`, and GOOGLE_CLIENT_ID
 
 [//]: # (TODO lock a chat, all comming msg will be single ans)
 
+[//]: # (TODO Lock and hide should be meta?Should be tags? Flexible)
+
 [//]: # (TODO refactor msg list modification, send a Operation, better for undo. kind of like redux's action)
 
+[//]: # (TODO undo, msg edit, removal? mobile undo? Undo stack, Each msg, on mount. Not focusing, undo deletion)
+
 [//]: # (TODO Mock open ai api server)
+
+[//]: # (TODO smart key, auto close \(\) "" '' ``````)
 
 [//]: # (TODO Always generate on send, Always sends as user, Add a button to add msg without sand)
 
