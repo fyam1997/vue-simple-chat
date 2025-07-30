@@ -39,7 +39,7 @@ function editClicked() {
             variant="plain"
             size="small"
             @click="editClicked"
-            title="insert above"
+            title="edit"
         />
         <v-icon-btn
             icon="md:add"
