@@ -66,3 +66,5 @@ add `.env`, and GOOGLE_CLIENT_ID
 
 [//]: # (TODO after fail or stop, no message)
 
+[//]: # (TODO scroll to bottom should not scroll msg, should scroll veiw bottom)
+
