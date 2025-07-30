@@ -83,6 +83,7 @@ export class ChatViewModel {
             const receivedMsg = this.messages.value.at(-1)!
             for await (const char of this.fetchChatCompletion()) {
                 if (this.stopGenerationFlag) {
+                    this.stopGenerationFlag = false
                     break
                 }
                 const isEmpty = receivedMsg.content === ""
