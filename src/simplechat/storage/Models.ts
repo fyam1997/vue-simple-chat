@@ -1,4 +1,4 @@
-import {chatData} from "@/simplechat/storage/ChatDB"
+import { chatData } from "@/simplechat/storage/ChatDB"
 
 export interface ChatMessageModel {
     role: string
@@ -20,7 +20,7 @@ export class ChatStorage {
         const list = await this.idList.loadValue()
         if (list === undefined) {
             const newID = Date.now()
-            await this.idList.emit([{id: newID, name: "New Chat " + newID}])
+            await this.idList.emit([{ id: newID, name: "New Chat " + newID }])
         }
 
         let id = await this.id.loadValue()

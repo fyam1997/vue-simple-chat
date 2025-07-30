@@ -1,10 +1,19 @@
-import {useLocalStorage} from "@vueuse/core"
-import {computed, inject, provide, ref, Ref} from "vue"
-import {APIConfigModel, APIConfigStore, SharedFlow, useSharedFlow} from "vue-f-misc"
-import {ChatIndex, ChatMessageModel, ChatStorage} from "@/simplechat/storage/Models"
-import {ChatInputModel} from "@/simplechat/components/ChatInputField.vue"
+import { useLocalStorage } from "@vueuse/core"
+import { computed, inject, provide, ref, Ref } from "vue"
+import {
+    APIConfigModel,
+    APIConfigStore,
+    SharedFlow,
+    useSharedFlow,
+} from "vue-f-misc"
+import {
+    ChatIndex,
+    ChatMessageModel,
+    ChatStorage,
+} from "@/simplechat/storage/Models"
+import { ChatInputModel } from "@/simplechat/components/ChatInputField.vue"
 import OpenAI from "openai"
-import {chatData} from "@/simplechat/storage/ChatDB"
+import { chatData } from "@/simplechat/storage/ChatDB"
 
 export class ChatViewModel {
     id
@@ -13,10 +22,9 @@ export class ChatViewModel {
 
     readonly darkTheme = useLocalStorage("app-dark-theme", true)
     readonly messages: Ref<ChatMessageModel[]>
-    readonly inputModel = useLocalStorage<ChatInputModel>(
-        "input-model",
-        {message: ""},
-    )
+    readonly inputModel = useLocalStorage<ChatInputModel>("input-model", {
+        message: "",
+    })
     readonly apiConfig: Ref<APIConfigModel>
 
     readonly loading = ref(false)
@@ -26,22 +34,30 @@ export class ChatViewModel {
     readonly snackbarMessages = ref<string[]>([])
     readonly scrolledToBottom = ref(false)
 
-    constructor(public apiConfigStore: APIConfigStore, public chatStorage: ChatStorage) {
-        this.apiConfig = useSharedFlow(apiConfigStore.config, {baseURL: "", apiKey: "", model: ""}, {deep: true})
+    constructor(
+        public apiConfigStore: APIConfigStore,
+        public chatStorage: ChatStorage,
+    ) {
+        this.apiConfig = useSharedFlow(
+            apiConfigStore.config,
+            { baseURL: "", apiKey: "", model: "" },
+            { deep: true },
+        )
         this.id = useSharedFlow(chatStorage.id, 0)
-        this.idList = useSharedFlow(chatStorage.idList, [], {deep: true})
-        this.messages = useSharedFlow(chatStorage.chatMessages, [], {deep: true})
+        this.idList = useSharedFlow(chatStorage.idList, [], { deep: true })
+        this.messages = useSharedFlow(chatStorage.chatMessages, [], {
+            deep: true,
+        })
         this.selectedIndex = computed(() => {
-            const found = this.idList.value.find(item => item.id === this.id.value)
-            return found || {id: 0, name: ""}
+            const found = this.idList.value.find(
+                (item) => item.id === this.id.value,
+            )
+            return found || { id: 0, name: "" }
         })
     }
 
     async init() {
-        await Promise.all([
-            this.apiConfigStore.init(),
-            this.chatStorage.init(),
-        ])
+        await Promise.all([this.apiConfigStore.init(), this.chatStorage.init()])
         await this.scrollToBottom()
     }
 
@@ -49,7 +65,7 @@ export class ChatViewModel {
         this.editedMessages()
         if (this.inputModel.value.message) {
             const newMsg = {
-                role: 'user',
+                role: "user",
                 content: this.inputModel.value.message,
                 id: Date.now(),
             }
@@ -99,7 +115,7 @@ export class ChatViewModel {
         this.loading.value = false
     }
 
-    async* fetchChatCompletion(): AsyncGenerator<string> {
+    async *fetchChatCompletion(): AsyncGenerator<string> {
         const client = new OpenAI({
             baseURL: this.apiConfig.value.baseURL,
             apiKey: this.apiConfig.value.apiKey,
@@ -134,7 +150,7 @@ export class ChatViewModel {
     async insertMessage(id?: number) {
         this.editedMessages()
         const newMsg = {
-            role: 'user',
+            role: "user",
             content: "",
             id: Date.now(),
         }
@@ -151,7 +167,9 @@ export class ChatViewModel {
     }
 
     downloadChats() {
-        const blob = new Blob([JSON.stringify(this.messages.value)], {type: "application/json"})
+        const blob = new Blob([JSON.stringify(this.messages.value)], {
+            type: "application/json",
+        })
         const url = URL.createObjectURL(blob)
         const a = document.createElement("a")
         a.href = url
@@ -179,7 +197,10 @@ export class ChatViewModel {
 
     async addChat(name?: string) {
         const newID = Date.now()
-        this.idList.value.unshift({id: newID, name: name ?? "New Chat " + newID})
+        this.idList.value.unshift({
+            id: newID,
+            name: name ?? "New Chat " + newID,
+        })
         await this.selectChat(newID)
         // manually calling storage since [] same as default, won't trigger vue's watch
         await this.chatStorage.chatMessages.emit([])
@@ -198,7 +219,7 @@ export class ChatViewModel {
         do {
             newChatName = `${baseName} (${count})`
             count++
-        } while (this.idList.value.some(item => item.name === newChatName))
+        } while (this.idList.value.some((item) => item.name === newChatName))
         return newChatName
     }
 
@@ -207,7 +228,7 @@ export class ChatViewModel {
         await chatData<ChatMessageModel[]>(deleteID).delete()
 
         const list = this.idList.value
-        const listIndex = list.findIndex(item => item.id === deleteID)
+        const listIndex = list.findIndex((item) => item.id === deleteID)
         list.splice(listIndex, 1)
 
         if (list.length === 0) {
@@ -228,7 +249,9 @@ export class ChatViewModel {
 
     editedMessages() {
         if (this.idList.value[0].id !== this.selectedIndex.value.id) {
-            const idx = this.idList.value.findIndex(item => item.id === this.selectedIndex.value.id)
+            const idx = this.idList.value.findIndex(
+                (item) => item.id === this.selectedIndex.value.id,
+            )
             const [item] = this.idList.value.splice(idx, 1)
             this.idList.value.unshift(item)
         }
@@ -241,10 +264,15 @@ export class ChatViewModel {
 
     static readonly KEY = Symbol("ChatViewModel")
 
-    static injectOrCreate(apiConfigStore?: APIConfigStore, chatStorage?: ChatStorage): ChatViewModel {
+    static injectOrCreate(
+        apiConfigStore?: APIConfigStore,
+        chatStorage?: ChatStorage,
+    ): ChatViewModel {
         const factory = () => {
-            const apiStore = apiConfigStore ?? inject<APIConfigStore>(APIConfigStore.KEY)
-            const chatStore = chatStorage ?? inject<ChatStorage>(ChatStorage.KEY)
+            const apiStore =
+                apiConfigStore ?? inject<APIConfigStore>(APIConfigStore.KEY)
+            const chatStore =
+                chatStorage ?? inject<ChatStorage>(ChatStorage.KEY)
             if (!apiStore || !chatStore) {
                 throw new Error("please provide APIConfigStore and ChatStorage")
             }
