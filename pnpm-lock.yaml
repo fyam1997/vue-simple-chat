@@ -24,8 +24,8 @@ importers:
         specifier: ^3.5.13
         version: 3.5.17
       vue-f-misc:
-        specifier: github:fyam1997/vue-f-misc#0.1.0-dev.7
-        version: https://codeload.github.com/fyam1997/vue-f-misc/tar.gz/c0b77e0c68a74f155f2615c5f20faeac04b2e446(idb@8.0.3)(material-design-icons-iconfont@6.7.0)(sortablejs@1.15.6)(vue@3.5.17)(vuetify@3.9.0(vue@3.5.17))
+        specifier: github:fyam1997/vue-f-misc#0.1.0-dev.9
+        version: https://codeload.github.com/fyam1997/vue-f-misc/tar.gz/7652abc7c33238d1bc5792f2ac17ae2a2d90afed(idb@8.0.3)(material-design-icons-iconfont@6.7.0)(sortablejs@1.15.6)(vue@3.5.17)(vuetify@3.9.0(vue@3.5.17))
       vue-global-events:
         specifier: ^3.0.1
         version: 3.0.1(vue@3.5.17)
@@ -1298,9 +1298,9 @@ packages:
       yaml:
         optional: true
 
-  vue-f-misc@https://codeload.github.com/fyam1997/vue-f-misc/tar.gz/c0b77e0c68a74f155f2615c5f20faeac04b2e446:
-    resolution: {tarball: https://codeload.github.com/fyam1997/vue-f-misc/tar.gz/c0b77e0c68a74f155f2615c5f20faeac04b2e446}
-    version: 0.1.0-dev.7
+  vue-f-misc@https://codeload.github.com/fyam1997/vue-f-misc/tar.gz/7652abc7c33238d1bc5792f2ac17ae2a2d90afed:
+    resolution: {tarball: https://codeload.github.com/fyam1997/vue-f-misc/tar.gz/7652abc7c33238d1bc5792f2ac17ae2a2d90afed}
+    version: 0.1.0-dev.9
     peerDependencies:
       idb: ^8.0.3
       material-design-icons-iconfont: ^6.7.0
@@ -2532,7 +2532,7 @@ snapshots:
       '@types/node': 18.19.116
       fsevents: 2.3.3
 
-  vue-f-misc@https://codeload.github.com/fyam1997/vue-f-misc/tar.gz/c0b77e0c68a74f155f2615c5f20faeac04b2e446(idb@8.0.3)(material-design-icons-iconfont@6.7.0)(sortablejs@1.15.6)(vue@3.5.17)(vuetify@3.9.0(vue@3.5.17)):
+  vue-f-misc@https://codeload.github.com/fyam1997/vue-f-misc/tar.gz/7652abc7c33238d1bc5792f2ac17ae2a2d90afed(idb@8.0.3)(material-design-icons-iconfont@6.7.0)(sortablejs@1.15.6)(vue@3.5.17)(vuetify@3.9.0(vue@3.5.17)):
     dependencies:
       idb: 8.0.3
       material-design-icons-iconfont: 6.7.0

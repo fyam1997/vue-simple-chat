@@ -16,7 +16,7 @@
     "marked": "^15.0.12",
     "openai": "^4.95.1",
     "vue": "^3.5.13",
-    "vue-f-misc": "github:fyam1997/vue-f-misc#0.1.0-dev.7",
+    "vue-f-misc": "github:fyam1997/vue-f-misc#0.1.0-dev.9",
     "vue-global-events": "^3.0.1",
     "vuetify": "^3.8.2"
   },
