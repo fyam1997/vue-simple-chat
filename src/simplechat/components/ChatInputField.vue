@@ -18,7 +18,9 @@ function sendMessage() {
 function onEnter(event: Event) {
     if (viewModel.largeScreen.value) {
         event.preventDefault()
-        sendMessage()
+        if (inputModel.value.message) {
+            sendMessage()
+        }
     }
 }
 </script>
