@@ -3,7 +3,7 @@ import ChatMessageList from "@/simplechat/components/ChatMessageList.vue"
 import ChatInputField from "@/simplechat/components/ChatInputField.vue"
 import { ChatViewModel } from "@/simplechat/components/ChatViewModel"
 import { useElementSize, useScroll, VueInstance } from "@vueuse/core"
-import { computed, useTemplateRef, watch } from "vue"
+import { computed, nextTick, useTemplateRef, watch } from "vue"
 
 const viewModel = ChatViewModel.injectOrCreate()
 
@@ -20,8 +20,10 @@ const remainingScroll = computed(() => {
     return scrollHeight - containerHeight - scrollY
 })
 watch(scrollHeightRef, () => {
-    console.debug("remeasure scroll height")
     scrollRef.measure()
+    if (remainingScroll.value < 128 && viewModel.loading.value) {
+        viewModel.scrollToBottom()
+    }
 })
 /**
  * if there is half of page size can scroll, show scroll to bottom button
@@ -30,11 +32,15 @@ const showScrollToBottom = computed(() => {
     const containerHeight = scrollContainerHeightRef.value
     return remainingScroll.value > containerHeight / 2
 })
-/**
- * consider scroll to bottom if remaining scroll is less than 64px
- */
-watch(remainingScroll, (scroll) => {
-    viewModel.scrolledToBottom.value = scroll < 128
+
+viewModel.scrollEvent.collect(() => {
+    nextTick(() => {
+        const msgListContainer = msgListContainerRef.value
+        msgListContainer?.scrollTo({
+            top: msgListContainer.scrollHeight,
+            behavior: "smooth",
+        })
+    })
 })
 </script>
 

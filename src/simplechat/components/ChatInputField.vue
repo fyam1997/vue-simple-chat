@@ -9,9 +9,10 @@ const viewModel = ChatViewModel.injectOrCreate()
 const inputModel = viewModel.inputModel
 const loading = viewModel.loading
 
-function sendMessage() {
+async function sendMessage() {
     if (!loading.value) {
-        viewModel.sendMessage()
+        await viewModel.scrollToBottom()
+        await viewModel.sendMessage()
     }
 }
 

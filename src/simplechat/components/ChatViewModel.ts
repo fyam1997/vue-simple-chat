@@ -30,9 +30,8 @@ export class ChatViewModel {
     readonly loading = ref(false)
     stopGenerationFlag = false
 
-    readonly scrollEvent = new SharedFlow<number>()
+    readonly scrollEvent = new SharedFlow<void>()
     readonly snackbarMessages = ref<string[]>([])
-    readonly scrolledToBottom = ref(false)
 
     screenWidth = useWindowSize().width
     largeScreen = computed(() => this.screenWidth.value >= 950)
@@ -75,7 +74,6 @@ export class ChatViewModel {
             this.messages.value.push(newMsg)
 
             this.inputModel.value.message = ""
-            await this.scrollEvent.emit(newMsg.id)
         }
         await this.fetchApiResponse()
     }
@@ -105,11 +103,7 @@ export class ChatViewModel {
                     this.stopGenerationFlag = false
                     break
                 }
-                const isEmpty = receivedMsg.content === ""
                 receivedMsg.content += char
-                if (isEmpty || this.scrolledToBottom.value) {
-                    await this.scrollToBottom()
-                }
             }
         } catch (e) {
             this.snackbarMessages.value.push("Translation fail")
@@ -245,10 +239,7 @@ export class ChatViewModel {
     }
 
     async scrollToBottom() {
-        const lastMsg = this.messages.value.at(-1)
-        if (lastMsg) {
-            await this.scrollEvent.emit(lastMsg.id)
-        }
+        await this.scrollEvent.emit(undefined)
     }
 
     editedMessages() {
