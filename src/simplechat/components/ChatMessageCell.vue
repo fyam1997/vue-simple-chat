@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { marked } from "marked"
-import { computed, ref } from "vue"
+import { computed, nextTick, ref, useTemplateRef } from "vue"
 import { ChatMessageModel } from "@/simplechat/storage/Models"
 import { ChatViewModel } from "@/simplechat/components/ChatViewModel"
 
@@ -63,9 +63,9 @@ function editClicked() {
         </div>
         <v-textarea
             v-if="editing"
-            key="edit"
+            autofocus
             v-model="props.message.content"
-            variant="outlined"
+            variant="solo"
             auto-grow
             single-line
             rows="1"
@@ -76,7 +76,6 @@ function editClicked() {
         />
         <div
             v-else
-            key="display"
             v-html="display"
             class="overflow-auto chat-message-html"
         />
