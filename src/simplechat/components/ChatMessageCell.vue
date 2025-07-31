@@ -31,6 +31,7 @@ function editClicked() {
                 hide-details
                 density="compact"
                 class="flex-grow-0"
+                :disabled="loading"
             />
             <v-spacer />
             <div class="d-flex flex-row align-center">
@@ -40,6 +41,7 @@ function editClicked() {
                     size="small"
                     @click="editClicked"
                     title="edit"
+                    :disabled="loading"
                 />
                 <v-icon-btn
                     icon="md:add"
@@ -55,6 +57,7 @@ function editClicked() {
                     size="small"
                     @click="viewModel.deleteMessage(message.id)"
                     title="delete"
+                    :disabled="loading"
                 />
             </div>
         </div>
