@@ -213,7 +213,8 @@ export class ChatViewModel {
         const target = chatData<ChatMessageModel[]>(index.id)
         const oldMessages = await target.loadValue()
         await this.addChat(this.getClonedChatName(index.name))
-        this.messages.value = oldMessages!
+        // useSharedFlow kind of buggy, directly emit to prevent dead loop
+        await this.chatStorage.chatMessages.emit(oldMessages!)
     }
 
     getClonedChatName(baseName: string) {
