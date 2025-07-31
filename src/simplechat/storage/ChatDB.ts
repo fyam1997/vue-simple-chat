@@ -1,5 +1,5 @@
-import {openDB} from "idb"
-import {cachedDB, DBDataFlow} from "vue-f-misc"
+import { openDB } from "idb"
+import { cachedDB, DBDataFlow } from "vue-f-misc"
 
 export enum ChatStore {
     ChatMessages = "ChatMessages",
