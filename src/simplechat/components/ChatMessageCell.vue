@@ -1,19 +1,39 @@
 <script setup lang="ts">
 import { marked } from "marked"
-import { computed, nextTick, ref, useTemplateRef } from "vue"
+import { computed, ref, watch } from "vue"
 import { ChatMessageModel } from "@/simplechat/storage/Models"
 import { ChatViewModel } from "@/simplechat/components/ChatViewModel"
+import markedShiki from "marked-shiki"
+import { codeToHtml } from "shiki"
 
 const props = defineProps<{
     message: ChatMessageModel
     loading: boolean
 }>()
-
-marked.setOptions({ breaks: true })
-const display = computed(() => marked(props.message.content))
-const editing = ref(false)
-
 const viewModel = ChatViewModel.injectOrCreate()
+
+const codeTheme = computed(() => {
+    return viewModel.darkTheme.value ? "min-dark" : "min-light"
+})
+
+// TODO should be done once
+marked.setOptions({ breaks: true, async: true }).use(
+    markedShiki({
+        async highlight(code, lang) {
+            return codeToHtml(code, { lang: lang, theme: codeTheme.value })
+        },
+    }),
+)
+const display = ref("")
+watch(
+    [props.message, codeTheme],
+    async ([msg]) => {
+        display.value = await marked.parse(msg.content)
+    },
+    { immediate: true },
+)
+
+const editing = ref(false)
 
 function editClicked() {
     viewModel.editedMessages()
@@ -74,11 +94,7 @@ function editClicked() {
             hide-details
             @keydown.esc.exact="editing = false"
         />
-        <div
-            v-else
-            v-html="display"
-            class="overflow-auto chat-message-html"
-        />
+        <div v-else v-html="display" class="overflow-auto chat-message-html" />
     </v-card>
 </template>
 

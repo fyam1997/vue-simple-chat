@@ -1,6 +1,6 @@
 {
   "name": "vue_studies",
-  "version": "0.2.0-dev.16",
+  "version": "0.2.0-dev.17",
   "private": true,
   "type": "module",
   "scripts": {
@@ -14,7 +14,9 @@
     "@vueuse/core": "^13.1.0",
     "idb": "^8.0.3",
     "marked": "^15.0.12",
+    "marked-shiki": "^1.2.0",
     "openai": "^4.95.1",
+    "shiki": "^3.9.1",
     "vue": "^3.5.13",
     "vue-f-misc": "github:fyam1997/vue-f-misc#0.1.0-dev.9",
     "vue-global-events": "^3.0.1",
@@ -22,9 +24,9 @@
   },
   "devDependencies": {
     "@types/google.accounts": "^0.0.17",
+    "@vitejs/plugin-vue": "^5.2.3",
     "dotenv": "^16.6.0",
     "gh-pages": "^6.3.0",
-    "@vitejs/plugin-vue": "^5.2.3",
     "material-design-icons-iconfont": "^6.7.0",
     "prettier": "^3.6.2",
     "vite": "^6.2.4",

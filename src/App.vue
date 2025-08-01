@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { computed, onMounted, provide, ref } from "vue"
-import {  APIConfigStore } from "vue-f-misc"
+import { APIConfigStore } from "vue-f-misc"
 import ChatMessagePanel from "@/simplechat/components/ChatMessagePanel.vue"
 import ChatConfigPanel from "@/simplechat/components/ChatConfigPanel.vue"
 import { GlobalEvents } from "vue-global-events"
@@ -28,6 +28,14 @@ function regenerate() {
         viewModel.fetchApiResponse()
     }
 }
+
+function beforeUnloadHandler(event: BeforeUnloadEvent) {
+    if (loading.value) {
+        event.preventDefault()
+    }
+}
+
+window.addEventListener("beforeunload", beforeUnloadHandler)
 </script>
 
 <template>
@@ -37,7 +45,10 @@ function regenerate() {
             v-model="viewModel.snackbarMessages.value"
             location="top"
         ></v-snackbar-queue>
-        <div v-if="!viewModel.largeScreen.value" class="w-100 h-100 d-flex flex-column">
+        <div
+            v-if="!viewModel.largeScreen.value"
+            class="w-100 h-100 d-flex flex-column"
+        >
             <div>
                 <v-tabs v-model="tab" fixed-tabs class="flex-grow-0">
                     <v-tab value="config-panel" class="text-none">Config</v-tab>

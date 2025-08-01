@@ -60,11 +60,20 @@ add `.env`, and GOOGLE_CLIENT_ID
 
 [//]: # (TODO extract all scroll controlling to separate view model)
 
-[//]: # (TODO auto scroll if loading in UI)
+[//]: # (TODO Chat and msg should have datetime, Edit time)
 
-[//]: # (TODO mobile enter dont send)
+[//]: # (TODO Chat content sync)
 
-[//]: # (TODO after fail or stop, no message)
+[//]: # (TODO Sync save token)
 
-[//]: # (TODO scroll to bottom should not scroll msg, should scroll veiw bottom)
+[//]: # (TODO sync should show comparison)
 
+[//]: # (TODO extra data)
+
+[//]: # (TODO Search finance data)
+
+[//]: # (TODO Enum chat search fin)
+
+[//]: # (TODO Tarvily search)
+
+[//]: # (TODO Change to option api, accessing viewmodel.ref will buggy. looks i should not use ref in shared view model. or use piniajs?)
