@@ -1,5 +1,5 @@
 import { useLocalStorage, useWindowSize } from "@vueuse/core"
-import { computed, inject, provide, ref, Ref, watch } from "vue"
+import { computed, inject, provide, ref, Ref } from "vue"
 import {
     APIConfigModel,
     APIConfigStore,
@@ -74,7 +74,10 @@ export class ChatViewModel {
         marked.setOptions({ breaks: true, async: true }).use(
             markedShiki({
                 async highlight(code, lang) {
-                    return codeToHtml(code, { lang: lang, theme: codeTheme.value })
+                    return codeToHtml(code, {
+                        lang: lang,
+                        theme: codeTheme.value,
+                    })
                 },
             }),
         )
@@ -83,7 +86,6 @@ export class ChatViewModel {
     }
 
     async sendMessage() {
-        this.editedMessages()
         if (this.inputModel.value.message) {
             this.messages.value.forEach((msg) => {
                 if (msg.role === "user") msg.asking = false
