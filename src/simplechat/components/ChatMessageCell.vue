@@ -1,32 +1,39 @@
 <script setup lang="ts">
 import { marked } from "marked"
-import { computed, ref } from "vue"
+import { computed, ref, watch } from "vue"
 import { ChatMessageModel } from "@/simplechat/storage/Models"
 import { ChatViewModel } from "@/simplechat/components/ChatViewModel"
 import markedShiki from "marked-shiki"
 import { codeToHtml } from "shiki"
-import { computedAsync } from "@vueuse/core"
 
 const props = defineProps<{
     message: ChatMessageModel
     loading: boolean
 }>()
+const viewModel = ChatViewModel.injectOrCreate()
 
 const codeTheme = computed(() => {
     return viewModel.darkTheme.value ? "min-dark" : "min-light"
 })
 
-const parser = marked.setOptions({ breaks: true, async: true }).use(
+// TODO should be done once
+marked.setOptions({ breaks: true, async: true }).use(
     markedShiki({
         async highlight(code, lang) {
             return codeToHtml(code, { lang: lang, theme: codeTheme.value })
         },
     }),
 )
-const display = computedAsync(() => parser.parse(props.message.content))
-const editing = ref(false)
+const display = ref("")
+watch(
+    [props.message, codeTheme],
+    async ([msg]) => {
+        display.value = await marked.parse(msg.content)
+    },
+    { immediate: true },
+)
 
-const viewModel = ChatViewModel.injectOrCreate()
+const editing = ref(false)
 
 function editClicked() {
     viewModel.editedMessages()
