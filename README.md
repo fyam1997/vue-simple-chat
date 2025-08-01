@@ -75,5 +75,3 @@ add `.env`, and GOOGLE_CLIENT_ID
 [//]: # (TODO Enum chat search fin)
 
 [//]: # (TODO Tarvily search)
-
-[//]: # (TODO marked js extension Shiki)

@@ -3,14 +3,27 @@ import { marked } from "marked"
 import { computed, ref } from "vue"
 import { ChatMessageModel } from "@/simplechat/storage/Models"
 import { ChatViewModel } from "@/simplechat/components/ChatViewModel"
+import markedShiki from "marked-shiki"
+import { codeToHtml } from "shiki"
+import { computedAsync } from "@vueuse/core"
 
 const props = defineProps<{
     message: ChatMessageModel
     loading: boolean
 }>()
 
-marked.setOptions({ breaks: true })
-const display = computed(() => marked(props.message.content))
+const codeTheme = computed(() => {
+    return viewModel.darkTheme.value ? "min-dark" : "min-light"
+})
+
+const parser = marked.setOptions({ breaks: true, async: true }).use(
+    markedShiki({
+        async highlight(code, lang) {
+            return codeToHtml(code, { lang: lang, theme: codeTheme.value })
+        },
+    }),
+)
+const display = computedAsync(() => parser.parse(props.message.content))
 const editing = ref(false)
 
 const viewModel = ChatViewModel.injectOrCreate()
