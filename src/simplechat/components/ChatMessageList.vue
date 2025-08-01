@@ -13,6 +13,7 @@ const loading = viewModel.loading
         <TransitionGroup>
             <ChatMessageCell
                 v-for="(msg, index) in messages"
+                v-show="msg.asking || !msg.hide || viewModel.showHidden.value"
                 :key="msg.id"
                 :message="msg"
                 :loading="loading && index === messages.length - 1"

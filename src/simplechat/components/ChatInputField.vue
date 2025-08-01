@@ -51,6 +51,20 @@ function onEnter(event: Event) {
                     />
                 </template>
                 <v-list>
+                    <v-checkbox
+                        v-model="viewModel.showHidden.value"
+                        hide-details
+                        label="Show Hidden Messages"
+                        density="compact"
+                        class="pl-3"
+                    />
+                    <v-checkbox
+                        v-model="viewModel.selectedIndex.value.locked"
+                        hide-details
+                        label="Lock Chat"
+                        density="compact"
+                        class="pl-3"
+                    />
                     <v-list-item
                         prepend-icon="md:download"
                         @click="viewModel.downloadChats()"

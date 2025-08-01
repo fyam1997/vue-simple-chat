@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { marked } from "marked"
-import { ref, watch } from "vue"
+import { computed, ref, watch } from "vue"
 import { ChatMessageModel } from "@/simplechat/storage/Models"
 import { ChatViewModel } from "@/simplechat/components/ChatViewModel"
 
@@ -20,6 +20,13 @@ watch(
 )
 
 const editing = ref(false)
+
+const editIcon = computed(() => {
+    return editing.value ? "md:done" : "md:edit"
+})
+const hideIcon = computed(() => {
+    return props.message.hide ? "md:visibility_off" : "md:visibility"
+})
 
 function editClicked() {
     viewModel.editedMessages()
@@ -42,7 +49,16 @@ function editClicked() {
             <v-spacer />
             <div class="d-flex flex-row align-center">
                 <v-icon-btn
-                    :icon="editing ? 'md:done' : 'md:edit'"
+                    v-if="viewModel.showHidden.value"
+                    :icon="hideIcon"
+                    variant="plain"
+                    size="small"
+                    @click="props.message.hide = !props.message.hide"
+                    title="edit"
+                    :disabled="loading"
+                />
+                <v-icon-btn
+                    :icon="editIcon"
                     variant="plain"
                     size="small"
                     @click="editClicked"
