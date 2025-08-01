@@ -30,6 +30,7 @@ export class ChatViewModel {
     })
     readonly apiConfig: Ref<APIConfigModel>
 
+    readonly showHidden = ref(false)
     readonly loading = ref(false)
     stopGenerationFlag = false
 
@@ -60,7 +61,7 @@ export class ChatViewModel {
             const found = this.idList.value.find(
                 (item) => item.id === this.id.value,
             )
-            return found || { id: 0, name: "" }
+            return found || { id: 0, name: "", locked: false }
         })
     }
 
@@ -84,6 +85,8 @@ export class ChatViewModel {
                 role: "user",
                 content: this.inputModel.value.message,
                 id: Date.now(),
+                hide: false,
+                asking: false,
             }
             this.messages.value.push(newMsg)
 
@@ -109,6 +112,8 @@ export class ChatViewModel {
                 role: "assistant",
                 content: "",
                 id: Date.now(),
+                hide: false,
+                asking: false,
             })
 
             const receivedMsg = this.messages.value.at(-1)!
@@ -164,6 +169,8 @@ export class ChatViewModel {
             role: "user",
             content: "",
             id: Date.now(),
+            hide: false,
+            asking: false,
         }
         if (id !== undefined) {
             const index = this.findMessageIndex(id)
@@ -211,6 +218,7 @@ export class ChatViewModel {
         this.idList.value.unshift({
             id: newID,
             name: name ?? "New Chat " + newID,
+            locked: false,
         })
         await this.selectChat(newID)
         // manually calling storage since [] same as default, won't trigger vue's watch
