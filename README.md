@@ -77,5 +77,3 @@ add `.env`, and GOOGLE_CLIENT_ID
 [//]: # (TODO Tarvily search)
 
 [//]: # (TODO marked js extension Shiki)
-
-[//]: # (TODO Loading ask before leave)
