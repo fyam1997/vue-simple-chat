@@ -14,11 +14,18 @@ import {
 import { ChatInputModel } from "@/simplechat/components/ChatInputField.vue"
 import OpenAI from "openai"
 import { chatData } from "@/simplechat/storage/ChatDB"
+import { marked } from "marked"
+import markedShiki from "marked-shiki"
+import { codeToHtml } from "shiki"
 
 export class ChatViewModel {
     id
     idList
     selectedIndex
+
+    get chatLocked() {
+        return this.selectedIndex.value.locked
+    }
 
     readonly darkTheme = useLocalStorage("app-dark-theme", true)
     readonly messages: Ref<ChatMessageModel[]>
@@ -27,6 +34,7 @@ export class ChatViewModel {
     })
     readonly apiConfig: Ref<APIConfigModel>
 
+    readonly showHidden = ref(false)
     readonly loading = ref(false)
     stopGenerationFlag = false
 
@@ -35,6 +43,9 @@ export class ChatViewModel {
 
     screenWidth = useWindowSize().width
     largeScreen = computed(() => this.screenWidth.value >= 950)
+    codeTheme = computed(() => {
+        return this.darkTheme.value ? "min-dark" : "min-light"
+    })
 
     constructor(
         public apiConfigStore: APIConfigStore,
@@ -54,22 +65,37 @@ export class ChatViewModel {
             const found = this.idList.value.find(
                 (item) => item.id === this.id.value,
             )
-            return found || { id: 0, name: "" }
+            return found || { id: 0, name: "", locked: false }
         })
     }
 
     async init() {
+        const codeTheme = this.codeTheme
+        marked.setOptions({ breaks: true, async: true }).use(
+            markedShiki({
+                async highlight(code, lang) {
+                    return codeToHtml(code, {
+                        lang: lang,
+                        theme: codeTheme.value,
+                    })
+                },
+            }),
+        )
         await Promise.all([this.apiConfigStore.init(), this.chatStorage.init()])
         await this.scrollToBottom()
     }
 
     async sendMessage() {
-        this.editedMessages()
         if (this.inputModel.value.message) {
+            this.messages.value.forEach((msg) => {
+                if (msg.role === "user") msg.asking = false
+            })
             const newMsg = {
                 role: "user",
                 content: this.inputModel.value.message,
                 id: Date.now(),
+                hide: this.chatLocked,
+                asking: this.chatLocked,
             }
             this.messages.value.push(newMsg)
 
@@ -79,6 +105,10 @@ export class ChatViewModel {
     }
 
     async fetchApiResponse() {
+        this.messages.value.forEach((msg) => {
+            if (msg.role === "assistant") msg.asking = false
+        })
+
         this.editedMessages()
         const apiConfig = this.apiConfig.value
         if (!apiConfig.baseURL || !apiConfig.model) {
@@ -95,6 +125,8 @@ export class ChatViewModel {
                 role: "assistant",
                 content: "",
                 id: Date.now(),
+                hide: this.chatLocked,
+                asking: this.chatLocked,
             })
 
             const receivedMsg = this.messages.value.at(-1)!
@@ -119,12 +151,14 @@ export class ChatViewModel {
             dangerouslyAllowBrowser: true,
         })
         // declare as any[] to suppress ChatCompletionMessageParam's warning
-        const requestMessages: any[] = this.messages.value.map((msg) => {
-            return {
-                role: msg.role,
-                content: msg.content,
-            }
-        })
+        const requestMessages: any[] = this.messages.value
+            .filter((msg) => !msg.hide || msg.asking)
+            .map((msg) => {
+                return {
+                    role: msg.role,
+                    content: msg.content,
+                }
+            })
         const completion = await client.chat.completions.create({
             model: this.apiConfig.value.model,
             messages: requestMessages,
@@ -150,12 +184,23 @@ export class ChatViewModel {
             role: "user",
             content: "",
             id: Date.now(),
+            hide: false,
+            asking: false,
         }
         if (id !== undefined) {
             const index = this.findMessageIndex(id)
             this.messages.value.splice(index, 0, newMsg)
-        } else {
+        } else if (this.showHidden.value) {
             this.messages.value.push(newMsg)
+        } else {
+            const lastVisibleIndex = this.messages.value.findLastIndex(
+                (msg) => !msg.hide || msg.asking,
+            )
+            if (lastVisibleIndex !== -1) {
+                this.messages.value.splice(lastVisibleIndex + 1, 0, newMsg)
+            } else {
+                this.messages.value.push(newMsg)
+            }
         }
     }
 
@@ -197,6 +242,7 @@ export class ChatViewModel {
         this.idList.value.unshift({
             id: newID,
             name: name ?? "New Chat " + newID,
+            locked: false,
         })
         await this.selectChat(newID)
         // manually calling storage since [] same as default, won't trigger vue's watch

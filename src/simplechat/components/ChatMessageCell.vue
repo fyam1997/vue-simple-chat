@@ -3,8 +3,6 @@ import { marked } from "marked"
 import { computed, ref, watch } from "vue"
 import { ChatMessageModel } from "@/simplechat/storage/Models"
 import { ChatViewModel } from "@/simplechat/components/ChatViewModel"
-import markedShiki from "marked-shiki"
-import { codeToHtml } from "shiki"
 
 const props = defineProps<{
     message: ChatMessageModel
@@ -12,21 +10,9 @@ const props = defineProps<{
 }>()
 const viewModel = ChatViewModel.injectOrCreate()
 
-const codeTheme = computed(() => {
-    return viewModel.darkTheme.value ? "min-dark" : "min-light"
-})
-
-// TODO should be done once
-marked.setOptions({ breaks: true, async: true }).use(
-    markedShiki({
-        async highlight(code, lang) {
-            return codeToHtml(code, { lang: lang, theme: codeTheme.value })
-        },
-    }),
-)
 const display = ref("")
 watch(
-    [props.message, codeTheme],
+    [props.message, viewModel.codeTheme],
     async ([msg]) => {
         display.value = await marked.parse(msg.content)
     },
@@ -35,14 +21,34 @@ watch(
 
 const editing = ref(false)
 
+const editIcon = computed(() => {
+    return editing.value ? "md:done" : "md:edit"
+})
+const hideIcon = computed(() => {
+    return props.message.hide ? "md:visibility_off" : "md:visibility"
+})
+
 function editClicked() {
     viewModel.editedMessages()
     editing.value = !editing.value
 }
+
+const cardStyle = computed<
+    "text" | "flat" | "elevated" | "tonal" | "outlined" | "plain"
+>(() => {
+    switch (props.message.role) {
+        case "user":
+            return "tonal"
+        case "system":
+            return "outlined"
+        default:
+            return "text"
+    }
+})
 </script>
 
 <template>
-    <v-card variant="outlined">
+    <v-card :variant="cardStyle">
         <div class="d-flex flex-row align-end flex-wrap">
             <v-select
                 v-model="props.message.role"
@@ -56,7 +62,16 @@ function editClicked() {
             <v-spacer />
             <div class="d-flex flex-row align-center">
                 <v-icon-btn
-                    :icon="editing ? 'md:done' : 'md:edit'"
+                    v-if="viewModel.showHidden.value"
+                    :icon="hideIcon"
+                    variant="plain"
+                    size="small"
+                    @click="props.message.hide = !props.message.hide"
+                    title="edit"
+                    :disabled="loading"
+                />
+                <v-icon-btn
+                    :icon="editIcon"
                     variant="plain"
                     size="small"
                     @click="editClicked"
