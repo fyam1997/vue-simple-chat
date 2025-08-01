@@ -1,10 +1,8 @@
 <script setup lang="ts">
 import { marked } from "marked"
-import { computed, ref, watch } from "vue"
+import { ref, watch } from "vue"
 import { ChatMessageModel } from "@/simplechat/storage/Models"
 import { ChatViewModel } from "@/simplechat/components/ChatViewModel"
-import markedShiki from "marked-shiki"
-import { codeToHtml } from "shiki"
 
 const props = defineProps<{
     message: ChatMessageModel
@@ -12,21 +10,9 @@ const props = defineProps<{
 }>()
 const viewModel = ChatViewModel.injectOrCreate()
 
-const codeTheme = computed(() => {
-    return viewModel.darkTheme.value ? "min-dark" : "min-light"
-})
-
-// TODO should be done once
-marked.setOptions({ breaks: true, async: true }).use(
-    markedShiki({
-        async highlight(code, lang) {
-            return codeToHtml(code, { lang: lang, theme: codeTheme.value })
-        },
-    }),
-)
 const display = ref("")
 watch(
-    [props.message, codeTheme],
+    [props.message, viewModel.codeTheme],
     async ([msg]) => {
         display.value = await marked.parse(msg.content)
     },

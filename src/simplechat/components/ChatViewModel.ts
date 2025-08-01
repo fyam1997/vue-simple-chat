@@ -1,5 +1,5 @@
 import { useLocalStorage, useWindowSize } from "@vueuse/core"
-import { computed, inject, provide, ref, Ref } from "vue"
+import { computed, inject, provide, ref, Ref, watch } from "vue"
 import {
     APIConfigModel,
     APIConfigStore,
@@ -14,6 +14,9 @@ import {
 import { ChatInputModel } from "@/simplechat/components/ChatInputField.vue"
 import OpenAI from "openai"
 import { chatData } from "@/simplechat/storage/ChatDB"
+import { marked } from "marked"
+import markedShiki from "marked-shiki"
+import { codeToHtml } from "shiki"
 
 export class ChatViewModel {
     id
@@ -35,6 +38,9 @@ export class ChatViewModel {
 
     screenWidth = useWindowSize().width
     largeScreen = computed(() => this.screenWidth.value >= 950)
+    codeTheme = computed(() => {
+        return this.darkTheme.value ? "min-dark" : "min-light"
+    })
 
     constructor(
         public apiConfigStore: APIConfigStore,
@@ -59,6 +65,14 @@ export class ChatViewModel {
     }
 
     async init() {
+        const codeTheme = this.codeTheme
+        marked.setOptions({ breaks: true, async: true }).use(
+            markedShiki({
+                async highlight(code, lang) {
+                    return codeToHtml(code, { lang: lang, theme: codeTheme.value })
+                },
+            }),
+        )
         await Promise.all([this.apiConfigStore.init(), this.chatStorage.init()])
         await this.scrollToBottom()
     }
