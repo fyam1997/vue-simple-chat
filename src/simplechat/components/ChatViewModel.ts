@@ -23,6 +23,10 @@ export class ChatViewModel {
     idList
     selectedIndex
 
+    get chatLocked() {
+        return this.selectedIndex.value.locked
+    }
+
     readonly darkTheme = useLocalStorage("app-dark-theme", true)
     readonly messages: Ref<ChatMessageModel[]>
     readonly inputModel = useLocalStorage<ChatInputModel>("input-model", {
@@ -81,12 +85,15 @@ export class ChatViewModel {
     async sendMessage() {
         this.editedMessages()
         if (this.inputModel.value.message) {
+            this.messages.value.forEach((msg) => {
+                if (msg.role === "user") msg.asking = false
+            })
             const newMsg = {
                 role: "user",
                 content: this.inputModel.value.message,
                 id: Date.now(),
-                hide: false,
-                asking: false,
+                hide: this.chatLocked,
+                asking: this.chatLocked,
             }
             this.messages.value.push(newMsg)
 
@@ -96,6 +103,10 @@ export class ChatViewModel {
     }
 
     async fetchApiResponse() {
+        this.messages.value.forEach((msg) => {
+            if (msg.role === "assistant") msg.asking = false
+        })
+
         this.editedMessages()
         const apiConfig = this.apiConfig.value
         if (!apiConfig.baseURL || !apiConfig.model) {
@@ -112,8 +123,8 @@ export class ChatViewModel {
                 role: "assistant",
                 content: "",
                 id: Date.now(),
-                hide: false,
-                asking: false,
+                hide: this.chatLocked,
+                asking: this.chatLocked,
             })
 
             const receivedMsg = this.messages.value.at(-1)!
@@ -138,12 +149,14 @@ export class ChatViewModel {
             dangerouslyAllowBrowser: true,
         })
         // declare as any[] to suppress ChatCompletionMessageParam's warning
-        const requestMessages: any[] = this.messages.value.map((msg) => {
-            return {
-                role: msg.role,
-                content: msg.content,
-            }
-        })
+        const requestMessages: any[] = this.messages.value
+            .filter((msg) => !msg.hide || msg.asking)
+            .map((msg) => {
+                return {
+                    role: msg.role,
+                    content: msg.content,
+                }
+            })
         const completion = await client.chat.completions.create({
             model: this.apiConfig.value.model,
             messages: requestMessages,
@@ -175,8 +188,17 @@ export class ChatViewModel {
         if (id !== undefined) {
             const index = this.findMessageIndex(id)
             this.messages.value.splice(index, 0, newMsg)
-        } else {
+        } else if (this.showHidden.value) {
             this.messages.value.push(newMsg)
+        } else {
+            const lastVisibleIndex = this.messages.value.findLastIndex(
+                (msg) => !msg.hide || msg.asking,
+            )
+            if (lastVisibleIndex !== -1) {
+                this.messages.value.splice(lastVisibleIndex + 1, 0, newMsg)
+            } else {
+                this.messages.value.push(newMsg)
+            }
         }
     }
 
