@@ -45,7 +45,10 @@ window.addEventListener("beforeunload", beforeUnloadHandler)
             v-model="viewModel.snackbarMessages.value"
             location="top"
         ></v-snackbar-queue>
-        <div v-if="!viewModel.largeScreen.value" class="w-100 h-100 d-flex flex-column">
+        <div
+            v-if="!viewModel.largeScreen.value"
+            class="w-100 h-100 d-flex flex-column"
+        >
             <div>
                 <v-tabs v-model="tab" fixed-tabs class="flex-grow-0">
                     <v-tab value="config-panel" class="text-none">Config</v-tab>

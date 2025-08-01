@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { marked } from "marked"
-import { computed, nextTick, ref, useTemplateRef } from "vue"
+import { computed, ref } from "vue"
 import { ChatMessageModel } from "@/simplechat/storage/Models"
 import { ChatViewModel } from "@/simplechat/components/ChatViewModel"
 
@@ -74,11 +74,7 @@ function editClicked() {
             hide-details
             @keydown.esc.exact="editing = false"
         />
-        <div
-            v-else
-            v-html="display"
-            class="overflow-auto chat-message-html"
-        />
+        <div v-else v-html="display" class="overflow-auto chat-message-html" />
     </v-card>
 </template>
 
