@@ -32,10 +32,23 @@ function editClicked() {
     viewModel.editedMessages()
     editing.value = !editing.value
 }
+
+const cardStyle = computed<
+    "text" | "flat" | "elevated" | "tonal" | "outlined" | "plain"
+>(() => {
+    switch (props.message.role) {
+        case "user":
+            return "tonal"
+        case "system":
+            return "outlined"
+        default:
+            return "text"
+    }
+})
 </script>
 
 <template>
-    <v-card variant="outlined">
+    <v-card :variant="cardStyle">
         <div class="d-flex flex-row align-end flex-wrap">
             <v-select
                 v-model="props.message.role"
