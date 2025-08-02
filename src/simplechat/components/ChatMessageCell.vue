@@ -12,11 +12,11 @@ const viewModel = ChatViewModel.injectOrCreate()
 
 const display = ref("")
 watch(
-    [props.message, viewModel.codeTheme],
-    async ([msg]) => {
-        display.value = await marked.parse(msg.content)
+    [props, viewModel.codeTheme],
+    async ([p]) => {
+        display.value = await marked.parse(p.message.content)
     },
-    { immediate: true },
+    { immediate: true, deep: true },
 )
 
 const editing = ref(false)
