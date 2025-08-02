@@ -12,6 +12,7 @@
   },
   "dependencies": {
     "@vueuse/core": "^13.1.0",
+    "franc-min": "^6.2.0",
     "idb": "^8.0.3",
     "marked": "^15.0.12",
     "marked-shiki": "^1.2.0",

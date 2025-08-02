@@ -34,6 +34,8 @@ add `.env`, and GOOGLE_CLIENT_ID
 
 ## TODO
 
+[//]: # (TODO replace icon lib)
+
 [//]: # (TODO keyboard navigation)
 
 [//]: # (ctrl+up/down to navigate msgs, L to lock chat til current msg, enter to edit, ctrl)

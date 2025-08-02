@@ -3,6 +3,8 @@ import { marked } from "marked"
 import { computed, ref, watch } from "vue"
 import { ChatMessageModel } from "@/simplechat/storage/Models"
 import { ChatViewModel } from "@/simplechat/components/ChatViewModel"
+import { speak } from "@/speech"
+import { franc } from "franc-min"
 
 const props = defineProps<{
     message: ChatMessageModel
@@ -14,7 +16,7 @@ const display = ref("")
 watch(
     [props, viewModel.codeTheme],
     async ([p]) => {
-        display.value = await marked.parse(p.message.content)
+        display.value = await marked.parse(p.message.content) + franc(p.message.content, { only: ["zho", "cmn", "eng"] })
     },
     { immediate: true, deep: true },
 )
@@ -45,6 +47,10 @@ const cardStyle = computed<
             return "text"
     }
 })
+
+function ttsClicked() {
+    speak(props.message.content)
+}
 </script>
 
 <template>
@@ -69,6 +75,13 @@ const cardStyle = computed<
                     @click="props.message.hide = !props.message.hide"
                     title="edit"
                     :disabled="loading"
+                />
+                <v-icon-btn
+                    icon="md:campaign"
+                    variant="plain"
+                    size="small"
+                    @click="ttsClicked"
+                    title="Text to speech"
                 />
                 <v-icon-btn
                     :icon="editIcon"
