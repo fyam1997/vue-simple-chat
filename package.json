@@ -15,6 +15,7 @@
     "idb": "^8.0.3",
     "marked": "^15.0.12",
     "marked-shiki": "^1.2.0",
+    "microsoft-cognitiveservices-speech-sdk": "^1.45.0",
     "openai": "^4.95.1",
     "shiki": "^3.9.1",
     "vue": "^3.5.13",
