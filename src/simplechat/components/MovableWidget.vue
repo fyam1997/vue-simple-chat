@@ -2,8 +2,13 @@
 import { computed, ref, useTemplateRef, watch } from "vue"
 import { clamp, useElementBounding } from "@vueuse/core"
 
-// TODO add option to snap or not
 // TODO add drag handle, maybe with a class
+const props = defineProps({
+    snapToEdge: {
+        type: Boolean,
+        default: false,
+    },
+})
 
 const widgetTop = ref(0)
 const widgetLeft = ref(0)
@@ -66,6 +71,9 @@ function mouseToWidgetPosition(event: MouseEvent | Touch) {
 }
 
 function snap(isLeft: boolean) {
+    if (!props.snapToEdge) {
+        return
+    }
     const padding = 32
     if (isLeft) {
         setWidgetPosition({
