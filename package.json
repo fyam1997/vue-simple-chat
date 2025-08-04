@@ -6,6 +6,7 @@
   "scripts": {
     "dev": "vite --host",
     "build": "vite build",
+    "prepreview": "vite build",
     "preview": "vite preview",
     "predeploy": "vite build",
     "deploy": "node scripts/deploy.js"
