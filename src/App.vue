@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, onMounted, provide, ref } from "vue"
+import { computed, defineAsyncComponent, onMounted, provide, ref } from "vue"
 import { APIConfigStore } from "vue-f-misc"
 import ChatMessagePanel from "@/simplechat/components/ChatMessagePanel.vue"
 import ChatConfigPanel from "@/simplechat/components/ChatConfigPanel.vue"
@@ -36,6 +36,13 @@ function beforeUnloadHandler(event: BeforeUnloadEvent) {
 }
 
 window.addEventListener("beforeunload", beforeUnloadHandler)
+
+const isDebug = import.meta.env.MODE === "development"
+const DebugPanel = isDebug
+    ? defineAsyncComponent(
+          () => import("@/simplechat/components/DebugPanel.vue"),
+      )
+    : null
 </script>
 
 <template>
@@ -53,6 +60,9 @@ window.addEventListener("beforeunload", beforeUnloadHandler)
                 <v-tabs v-model="tab" fixed-tabs class="flex-grow-0">
                     <v-tab value="config-panel" class="text-none">Config</v-tab>
                     <v-tab value="chat-panel" class="text-none">Chats</v-tab>
+                    <v-tab v-if="isDebug" value="debug-panel" class="text-none">
+                        Debug
+                    </v-tab>
                 </v-tabs>
             </div>
             <v-divider />
@@ -64,6 +74,10 @@ window.addEventListener("beforeunload", beforeUnloadHandler)
                 <v-window-item value="chat-panel" class="h-100">
                     <ChatMessagePanel class="h-100" />
                 </v-window-item>
+
+                <v-window-item v-if="isDebug" value="debug-panel" class="h-100">
+                    <component v-if="isDebug" :is="DebugPanel" />
+                </v-window-item>
             </v-window>
         </div>
 
@@ -71,6 +85,8 @@ window.addEventListener("beforeunload", beforeUnloadHandler)
             <ChatConfigPanel class="config-panel-large w-100 h-100" />
             <v-divider vertical class="mt-4 mb-4" />
             <ChatMessagePanel class="chat-panel-large flex-grow-1 h-100 pb-4" />
+            <v-divider v-if="isDebug" vertical class="mt-4 mb-4" />
+            <component v-if="isDebug" :is="DebugPanel" />
         </div>
     </v-app>
 </template>
