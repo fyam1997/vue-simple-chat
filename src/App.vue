@@ -41,7 +41,7 @@ window.addEventListener("beforeunload", beforeUnloadHandler)
 const isDebug = import.meta.env.MODE === "development"
 const DebugPanel = isDebug
     ? defineAsyncComponent(
-          () => import("@/simplechat/components/DebugPanel.vue"),
+          () => import("@/simplechat/components/DebugMenuButton.vue"),
       )
     : null
 </script>
@@ -80,12 +80,7 @@ const DebugPanel = isDebug
             <v-divider vertical class="mt-4 mb-4" />
             <ChatMessagePanel class="chat-panel-large flex-grow-1 h-100 pb-4" />
         </div>
-        <MovableWidget
-            v-if="isDebug"
-            class="h-100 w-100 position-absolute top-0 left-0"
-        >
-            <component :is="DebugPanel" />
-        </MovableWidget>
+        <component v-if="isDebug" class="drag-handle" :is="DebugPanel" />
     </v-app>
 </template>
 

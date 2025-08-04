@@ -2,7 +2,6 @@
 import { computed, ref, useTemplateRef, watch } from "vue"
 import { clamp, useElementBounding } from "@vueuse/core"
 
-// TODO add drag handle, maybe with a class
 const props = defineProps({
     snapToEdge: {
         type: Boolean,
@@ -97,7 +96,7 @@ function snap(isLeft: boolean) {
     }
 }
 
-function handleMouseDown(event: TouchEvent | MouseEvent) {
+function startDrag(event: TouchEvent | MouseEvent) {
     event.preventDefault()
     window.addEventListener("mousemove", handleMouseMove)
     window.addEventListener("mouseup", handleMouseUp)
@@ -138,13 +137,8 @@ function handleMouseUp(event: TouchEvent | MouseEvent) {
 </script>
 <template>
     <div ref="dragArea" class="movable-area">
-        <div
-            ref="widget"
-            class="movable-widget"
-            @mousedown="handleMouseDown"
-            @touchstart="handleMouseDown"
-        >
-            <slot />
+        <div ref="widget" class="movable-widget">
+            <slot :startDrag="startDrag" />
         </div>
     </div>
 </template>
