@@ -6,6 +6,7 @@ import ChatConfigPanel from "@/simplechat/components/ChatConfigPanel.vue"
 import { GlobalEvents } from "vue-global-events"
 import { ChatViewModel } from "@/simplechat/components/ChatViewModel"
 import { ChatStorage } from "@/simplechat/storage/Models"
+import MovableWidget from "@/simplechat/components/MovableWidget.vue"
 
 const apiConfigStore = new APIConfigStore(__GOOGLE_CLIENT_ID__)
 provide(APIConfigStore.KEY, apiConfigStore)
@@ -60,9 +61,6 @@ const DebugPanel = isDebug
                 <v-tabs v-model="tab" fixed-tabs class="flex-grow-0">
                     <v-tab value="config-panel" class="text-none">Config</v-tab>
                     <v-tab value="chat-panel" class="text-none">Chats</v-tab>
-                    <v-tab v-if="isDebug" value="debug-panel" class="text-none">
-                        Debug
-                    </v-tab>
                 </v-tabs>
             </div>
             <v-divider />
@@ -74,10 +72,6 @@ const DebugPanel = isDebug
                 <v-window-item value="chat-panel" class="h-100">
                     <ChatMessagePanel class="h-100" />
                 </v-window-item>
-
-                <v-window-item v-if="isDebug" value="debug-panel" class="h-100">
-                    <component v-if="isDebug" :is="DebugPanel" />
-                </v-window-item>
             </v-window>
         </div>
 
@@ -85,9 +79,13 @@ const DebugPanel = isDebug
             <ChatConfigPanel class="config-panel-large w-100 h-100" />
             <v-divider vertical class="mt-4 mb-4" />
             <ChatMessagePanel class="chat-panel-large flex-grow-1 h-100 pb-4" />
-            <v-divider v-if="isDebug" vertical class="mt-4 mb-4" />
-            <component v-if="isDebug" :is="DebugPanel" />
         </div>
+        <MovableWidget
+            v-if="isDebug"
+            class="h-100 w-100 position-absolute top-0 left-0"
+        >
+            <component :is="DebugPanel" />
+        </MovableWidget>
     </v-app>
 </template>
 
