@@ -3,7 +3,7 @@ import ChatMessageList from "@/simplechat/components/ChatMessageList.vue"
 import ChatInputField from "@/simplechat/components/ChatInputField.vue"
 import { ChatViewModel } from "@/simplechat/components/ChatViewModel"
 import { useElementSize, useScroll, VueInstance } from "@vueuse/core"
-import { computed, nextTick, useTemplateRef, watch } from "vue"
+import { computed, useTemplateRef, watch } from "vue"
 
 const viewModel = ChatViewModel.injectOrCreate()
 
@@ -34,13 +34,17 @@ const showScrollToBottom = computed(() => {
 })
 
 viewModel.scrollEvent.collect(() => {
-    nextTick(() => {
+    // TODO set timeout since msg list might not be completely rendered when scroll
+    setTimeout(() => {
         const msgListContainer = msgListContainerRef.value
+        if (!msgListContainer) {
+            return
+        }
         msgListContainer?.scrollTo({
             top: msgListContainer.scrollHeight,
             behavior: "smooth",
         })
-    })
+    }, 100)
 })
 </script>
 

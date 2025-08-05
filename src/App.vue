@@ -1,11 +1,12 @@
 <script setup lang="ts">
-import { computed, onMounted, provide, ref } from "vue"
+import { computed, defineAsyncComponent, onMounted, provide, ref } from "vue"
 import { APIConfigStore } from "vue-f-misc"
 import ChatMessagePanel from "@/simplechat/components/ChatMessagePanel.vue"
 import ChatConfigPanel from "@/simplechat/components/ChatConfigPanel.vue"
 import { GlobalEvents } from "vue-global-events"
 import { ChatViewModel } from "@/simplechat/components/ChatViewModel"
 import { ChatStorage } from "@/simplechat/storage/Models"
+import MovableWidget from "@/simplechat/components/MovableWidget.vue"
 
 const apiConfigStore = new APIConfigStore(__GOOGLE_CLIENT_ID__)
 provide(APIConfigStore.KEY, apiConfigStore)
@@ -36,6 +37,13 @@ function beforeUnloadHandler(event: BeforeUnloadEvent) {
 }
 
 window.addEventListener("beforeunload", beforeUnloadHandler)
+
+const isDebug = import.meta.env.MODE === "development"
+const DebugPanel = isDebug
+    ? defineAsyncComponent(
+          () => import("@/simplechat/components/DebugMenuButton.vue"),
+      )
+    : null
 </script>
 
 <template>
@@ -72,6 +80,7 @@ window.addEventListener("beforeunload", beforeUnloadHandler)
             <v-divider vertical class="mt-4 mb-4" />
             <ChatMessagePanel class="chat-panel-large flex-grow-1 h-100 pb-4" />
         </div>
+        <component v-if="isDebug" class="drag-handle" :is="DebugPanel" />
     </v-app>
 </template>
 

@@ -1,11 +1,12 @@
 {
   "name": "vue_studies",
-  "version": "0.2.0-dev.19",
+  "version": "0.2.0-dev.20",
   "private": true,
   "type": "module",
   "scripts": {
     "dev": "vite --host",
     "build": "vite build",
+    "prepreview": "vite build",
     "preview": "vite preview",
     "predeploy": "vite build",
     "deploy": "node scripts/deploy.js"

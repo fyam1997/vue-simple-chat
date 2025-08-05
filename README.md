@@ -65,3 +65,7 @@ add `.env`, and GOOGLE_CLIENT_ID
 [//]: # (TODO Tarvily search)
 
 [//]: # (TODO Change to option api, accessing viewmodel.ref will buggy. looks i should not use ref in shared view model. or use piniajs?)
+
+[//]: # (TODO Scrolling failed, loaded last scroll height, add delay can solve, but think a better way)
+
+[//]: # (TODO msg should be in edit mode after inserted)
