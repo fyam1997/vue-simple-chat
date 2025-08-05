@@ -14,7 +14,12 @@ const display = ref("")
 watch(
     [props, viewModel.codeTheme],
     async ([p]) => {
-        display.value = await marked.parse(p.message.content)
+        try {
+            display.value = await marked.parse(p.message.content)
+        } catch (e) {
+            // might be unfinished code block
+            console.debug(e)
+        }
     },
     { immediate: true, deep: true },
 )
