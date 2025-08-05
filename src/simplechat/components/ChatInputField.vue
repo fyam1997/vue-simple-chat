@@ -11,7 +11,6 @@ const loading = viewModel.loading
 
 async function sendMessage() {
     if (!loading.value) {
-        await viewModel.scrollToBottom()
         await viewModel.sendMessage()
     }
 }

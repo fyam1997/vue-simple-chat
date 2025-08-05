@@ -100,6 +100,8 @@ export class ChatViewModel {
             this.messages.value.push(newMsg)
 
             this.inputModel.value.message = ""
+
+            await this.scrollToBottom()
         }
         await this.fetchApiResponse()
     }
