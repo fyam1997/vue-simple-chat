@@ -6,7 +6,6 @@ import ChatConfigPanel from "@/simplechat/components/ChatConfigPanel.vue"
 import { GlobalEvents } from "vue-global-events"
 import { ChatViewModel } from "@/simplechat/components/ChatViewModel"
 import { ChatStorage } from "@/simplechat/storage/Models"
-import MovableWidget from "@/simplechat/components/MovableWidget.vue"
 
 const apiConfigStore = new APIConfigStore(__GOOGLE_CLIENT_ID__)
 provide(APIConfigStore.KEY, apiConfigStore)
@@ -48,7 +47,10 @@ const DebugPanel = isDebug
 
 <template>
     <v-app :theme="theme">
-        <GlobalEvents @keyup.ctrl.enter.exact.prevent="regenerate" />
+        <GlobalEvents
+            @keydown.meta.enter.exact.prevent="regenerate"
+            @keydown.ctrl.enter.exact.prevent="regenerate"
+        />
         <v-snackbar-queue
             v-model="viewModel.snackbarMessages.value"
             location="top"
