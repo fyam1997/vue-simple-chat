@@ -72,4 +72,16 @@ add `.env`, and GOOGLE_CLIENT_ID
 
 [//]: # (TODO msg should be in edit mode after inserted)
 
+[//]: # (TODO should focus to input box when start new chat)
+
 [//]: # (TODO added chat create time, default chat name should be empty, show date if empty, if empty, next send msg generate title)
+
+[//]: # (TODO title should directly update target index, not current index)
+
+[//]: # (TODO hide menu after click input menu, except checkbox)
+
+[//]: # (TODO title should not have markdown format)
+
+[//]: # (TODO like loading manager, should have a db value manager, observe each key, remove observer when killed)
+
+[//]: # (TODO add a change log)
