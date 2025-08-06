@@ -6,6 +6,7 @@ import { useElementSize, useScroll, VueInstance } from "@vueuse/core"
 import { computed, useTemplateRef, watch } from "vue"
 
 const viewModel = ChatViewModel.injectOrCreate()
+const loading = viewModel.loadingManager.get("global")
 
 const msgListContainerRef = useTemplateRef<HTMLDivElement>("msg-list-container")
 const msgListRef = useTemplateRef<VueInstance>("msg-list")
@@ -21,7 +22,7 @@ const remainingScroll = computed(() => {
 })
 watch(scrollHeightRef, () => {
     scrollRef.measure()
-    if (remainingScroll.value < 128 && viewModel.loading.value) {
+    if (remainingScroll.value < 128 && loading.value) {
         viewModel.scrollToBottom()
     }
 })

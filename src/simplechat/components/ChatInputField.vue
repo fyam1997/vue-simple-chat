@@ -7,7 +7,8 @@ export interface ChatInputModel {
 
 const viewModel = ChatViewModel.injectOrCreate()
 const inputModel = viewModel.inputModel
-const loading = viewModel.loading
+const loading = viewModel.loadingManager.get("global")
+const titleLoading = viewModel.loadingManager.get("title")
 
 async function sendMessage() {
     if (!loading.value) {
@@ -56,7 +57,7 @@ function onEnter(event: Event) {
                         title="Generate Title"
                         class="text-none"
                         density="compact"
-                        :disabled="loading"
+                        :disabled="titleLoading"
                     />
                     <v-checkbox
                         v-model="viewModel.showHidden.value"

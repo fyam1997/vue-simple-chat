@@ -8,7 +8,7 @@ const viewModel = ChatViewModel.injectOrCreate()
 const toggleThemeIcon = computed(() => {
     return viewModel.darkTheme.value ? "md:light_mode" : "md:dark_mode"
 })
-const loading = viewModel.loading
+const loading = viewModel.loadingManager.get("global")
 const appVersion = __APP_VERSION__
 const idList = viewModel.idList
 </script>

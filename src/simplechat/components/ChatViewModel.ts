@@ -17,6 +17,7 @@ import { chatData } from "@/simplechat/storage/ChatDB"
 import { marked } from "marked"
 import markedShiki from "marked-shiki"
 import { codeToHtml } from "shiki"
+import { LoadingManager } from "@/simplechat/components/LoadingManager"
 
 export class ChatViewModel {
     id
@@ -35,7 +36,7 @@ export class ChatViewModel {
     readonly apiConfig: Ref<APIConfigModel>
 
     readonly showHidden = ref(false)
-    readonly loading = ref(false)
+    readonly loadingManager = new LoadingManager()
     stopGenerationFlag = false
 
     readonly scrollEvent = new SharedFlow<void>()
@@ -109,6 +110,7 @@ export class ChatViewModel {
     }
 
     async fetchApiResponse() {
+        this.loadingManager.set("global", true)
         this.messages.value.forEach((msg) => {
             if (msg.role === "assistant") msg.asking = false
         })
@@ -123,7 +125,6 @@ export class ChatViewModel {
             this.snackbarMessages.value.push("Chat is empty")
             return
         }
-        this.loading.value = true
         try {
             this.messages.value.push({
                 role: "assistant",
@@ -145,11 +146,10 @@ export class ChatViewModel {
             this.snackbarMessages.value.push("Translation fail")
             console.error(e)
         }
-        this.loading.value = false
+        this.loadingManager.set("global", false)
     }
 
     async *fetchChatCompletion(): AsyncGenerator<string> {
-        this.loading.value = true
         const client = this.getOpenAIClient()
         const requestMessages = this.getRequestMessages()
         const completion = await client.chat.completions.create({
@@ -160,11 +160,11 @@ export class ChatViewModel {
         for await (const event of completion) {
             yield* event.choices[0].delta.content ?? ""
         }
-        this.loading.value = false
     }
 
     // declare as any[] to suppress ChatCompletionMessageParam's warning
     async generateTitle() {
+        this.loadingManager.set("title", true)
         const client = this.getOpenAIClient()
         const requestMessages = this.getRequestMessages()
         requestMessages.push({
@@ -178,6 +178,7 @@ export class ChatViewModel {
         })
         this.selectedIndex.value.name =
             completion.choices[0].message.content ?? ""
+        this.loadingManager.set("title", false)
     }
 
     getOpenAIClient() {
@@ -330,7 +331,7 @@ export class ChatViewModel {
 
     stopGenerate() {
         this.stopGenerationFlag = true
-        this.loading.value = false
+        this.loadingManager.set("global", false)
     }
 
     static readonly KEY = Symbol("ChatViewModel")

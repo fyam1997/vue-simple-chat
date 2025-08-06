@@ -15,7 +15,7 @@ provide(ChatStorage.KEY, chatStorage)
 
 const viewModel = ChatViewModel.injectOrCreate(apiConfigStore, chatStorage)
 onMounted(() => viewModel.init())
-const loading = viewModel.loading
+const loading = viewModel.loadingManager.get("global")
 
 const theme = computed(() => {
     return viewModel.darkTheme.value ? "dark" : "light"
