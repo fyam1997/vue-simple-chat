@@ -9,6 +9,7 @@ const toggleThemeIcon = computed(() => {
     return viewModel.darkTheme.value ? "md:light_mode" : "md:dark_mode"
 })
 const loading = viewModel.loadingManager.get("global")
+const titleLoading = viewModel.loadingManager.get("title")
 const appVersion = __APP_VERSION__
 const idList = viewModel.idList
 </script>
@@ -20,7 +21,7 @@ const idList = viewModel.idList
             prepend-icon="md:note_add"
             @click="viewModel.addChat()"
             text="Start New Chat"
-            :disabled="loading"
+            :disabled="loading || titleLoading"
             variant="outlined"
             class="text-none w-100"
         />
