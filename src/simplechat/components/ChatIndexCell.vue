@@ -13,7 +13,7 @@ const selectedIndex = viewModel.selectedIndex
 
 const displayName = computed(() => {
     if (props.index.name === "") {
-        return "No Name"
+        return `New Chat ${props.index.id}`
     } else {
         return props.index.name
     }

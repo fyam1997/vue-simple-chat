@@ -26,7 +26,6 @@ const appendIcon = computed(() =>
 )
 
 let realRespondMethod = viewModel.fetchChatCompletion
-console.log("hey")
 
 async function* stubRespondMethod(): AsyncGenerator<string> {
     yield* yieldText(lorem)
