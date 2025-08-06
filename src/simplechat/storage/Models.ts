@@ -24,7 +24,7 @@ export class ChatStorage {
         if (list === undefined) {
             const newID = Date.now()
             await this.idList.emit([
-                { id: newID, name: "New Chat " + newID, locked: false },
+                { id: newID, name: "", locked: false },
             ])
         }
 

@@ -272,7 +272,7 @@ export class ChatViewModel {
         const newID = Date.now()
         this.idList.value.unshift({
             id: newID,
-            name: name ?? "New Chat " + newID,
+            name: name ?? "",
             locked: false,
         })
         await this.selectChat(newID)
