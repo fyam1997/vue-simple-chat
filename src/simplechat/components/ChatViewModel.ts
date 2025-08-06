@@ -57,7 +57,9 @@ export class ChatViewModel {
             { deep: true },
         )
         this.id = useSharedFlow(chatStorage.id, 0)
-        this.idList = useSharedFlow(chatStorage.idList, [], { deep: true })
+        this.idList = useSharedFlow(chatStorage.idList, [], {
+            deep: true,
+        })
         this.messages = useSharedFlow(chatStorage.chatMessages, [], {
             deep: true,
         })
@@ -147,20 +149,9 @@ export class ChatViewModel {
     }
 
     async *fetchChatCompletion(): AsyncGenerator<string> {
-        const client = new OpenAI({
-            baseURL: this.apiConfig.value.baseURL,
-            apiKey: this.apiConfig.value.apiKey,
-            dangerouslyAllowBrowser: true,
-        })
-        // declare as any[] to suppress ChatCompletionMessageParam's warning
-        const requestMessages: any[] = this.messages.value
-            .filter((msg) => !msg.hide || msg.asking)
-            .map((msg) => {
-                return {
-                    role: msg.role,
-                    content: msg.content,
-                }
-            })
+        this.loading.value = true
+        const client = this.getOpenAIClient()
+        const requestMessages = this.getRequestMessages()
         const completion = await client.chat.completions.create({
             model: this.apiConfig.value.model,
             messages: requestMessages,
@@ -169,6 +160,43 @@ export class ChatViewModel {
         for await (const event of completion) {
             yield* event.choices[0].delta.content ?? ""
         }
+        this.loading.value = false
+    }
+
+    // declare as any[] to suppress ChatCompletionMessageParam's warning
+    async generateTitle() {
+        const client = this.getOpenAIClient()
+        const requestMessages = this.getRequestMessages()
+        requestMessages.push({
+            role: "system",
+            content:
+                "Summarize this conversation in a short, descriptive title, directly output the title, DO NOT add any description or decoration, DO NOT add quotations",
+        })
+        const completion = await client.chat.completions.create({
+            model: this.apiConfig.value.model,
+            messages: requestMessages,
+        })
+        this.selectedIndex.value.name =
+            completion.choices[0].message.content ?? ""
+    }
+
+    getOpenAIClient() {
+        return new OpenAI({
+            baseURL: this.apiConfig.value.baseURL,
+            apiKey: this.apiConfig.value.apiKey,
+            dangerouslyAllowBrowser: true,
+        })
+    }
+
+    getRequestMessages(): any[] {
+        return this.messages.value
+            .filter((msg) => !msg.hide || msg.asking)
+            .map((msg) => {
+                return {
+                    role: msg.role,
+                    content: msg.content,
+                }
+            })
     }
 
     async deleteMessage(id: number) {

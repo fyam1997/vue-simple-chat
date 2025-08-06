@@ -50,6 +50,14 @@ function onEnter(event: Event) {
                     />
                 </template>
                 <v-list>
+                    <v-list-item
+                        prepend-icon="md:title"
+                        @click="viewModel.generateTitle()"
+                        title="Generate Title"
+                        class="text-none"
+                        density="compact"
+                        :disabled="loading"
+                    />
                     <v-checkbox
                         v-model="viewModel.showHidden.value"
                         hide-details
