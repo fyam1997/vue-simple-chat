@@ -56,6 +56,8 @@ add `.env`, and GOOGLE_CLIENT_ID
 
 [//]: # (TODO sync should show comparison)
 
+[//]: # (TODO separate config manage and sync)
+
 [//]: # (TODO extra data)
 
 [//]: # (TODO Search finance data)
@@ -69,3 +71,5 @@ add `.env`, and GOOGLE_CLIENT_ID
 [//]: # (TODO Scrolling failed, loaded last scroll height, add delay can solve, but think a better way)
 
 [//]: # (TODO msg should be in edit mode after inserted)
+
+[//]: # (TODO separated loading)
