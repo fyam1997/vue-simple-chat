@@ -106,7 +106,11 @@ export class ChatViewModel {
 
             await this.scrollToBottom()
         }
-        await this.fetchApiResponse()
+        if (this.selectedIndex.value.name === "") {
+            await Promise.all([this.generateTitle(), this.fetchApiResponse()])
+        } else {
+            await this.fetchApiResponse()
+        }
     }
 
     async fetchApiResponse() {
