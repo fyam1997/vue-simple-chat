@@ -72,4 +72,4 @@ add `.env`, and GOOGLE_CLIENT_ID
 
 [//]: # (TODO msg should be in edit mode after inserted)
 
-[//]: # (TODO separated loading)
+[//]: # (TODO added chat create time, default chat name should be empty, show date if empty, if empty, next send msg generate title)
