@@ -5,7 +5,7 @@ import { ChatViewModel } from "@/simplechat/components/ChatViewModel"
 const viewModel = ChatViewModel.injectOrCreate()
 
 const messages = viewModel.messages
-const loading = viewModel.loading
+const loading = viewModel.loadingManager.get("global")
 </script>
 
 <template>

@@ -8,7 +8,7 @@ const props = defineProps<{
 }>()
 
 const viewModel = ChatViewModel.injectOrCreate()
-const loading = viewModel.loading
+const loading = viewModel.loadingManager.get("global")
 const selectedIndex = viewModel.selectedIndex
 
 const displayName = computed(() => {
